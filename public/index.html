@@ -108,38 +108,52 @@
   .result.show{display:block;animation:rise .5s ease}
   @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
   @media (prefers-reduced-motion:reduce){.result.show{animation:none}}
-  .scorehead{display:flex;align-items:center;gap:22px;flex-wrap:wrap;justify-content:center;text-align:center}
+  .rcard{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:var(--shadow)}
+  .scorehead{display:flex;align-items:center;gap:28px;flex-wrap:wrap;justify-content:center;text-align:center}
   @media(min-width:520px){.scorehead{justify-content:flex-start;text-align:left}}
-  .gauge{position:relative;width:132px;height:132px;flex:none}
+  .gauge{position:relative;width:144px;height:144px;flex:none}
   .gauge svg{transform:rotate(-90deg)}
   .gauge .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-  .gauge .num{font-family:"Bodoni Moda",serif;font-weight:900;font-size:40px;line-height:1}
-  .gauge .den{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:.05em}
-  .scoremeta{flex:1;min-width:200px}
-  .verdict{display:inline-block;font-weight:700;font-size:14px;padding:6px 15px;border-radius:100px;margin-bottom:10px}
+  .gauge .num{font-family:"Bodoni Moda",serif;font-weight:900;font-size:46px;line-height:1}
+  .gauge .den{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:.06em}
+  .scoremeta{flex:1;min-width:190px}
+  .verdict{display:inline-block;font-weight:700;font-size:14px;padding:7px 16px;border-radius:100px;margin-bottom:12px}
   .verdict.g{background:var(--green-soft);color:var(--green)} .num.g{color:var(--green)}
   .verdict.o{background:var(--champ-soft);color:var(--champ)} .num.o{color:var(--champ)}
   .verdict.r{background:var(--rose-soft);color:var(--rose-deep)} .num.r{color:var(--rose-deep)}
-  .angle{font-size:13px;color:var(--muted);margin-top:2px}
-  .angle b{color:var(--ink-soft);font-weight:600}
-  .hookline{margin:18px 0 2px;padding:16px 18px;background:var(--surface-2);border-radius:12px;
-    font-style:italic;color:var(--ink);font-size:16px;line-height:1.45}
+  .scoremeta .angle{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .angleval{font-family:"Bodoni Moda",serif;font-size:19px;color:var(--ink);margin-top:3px;line-height:1.25}
+  .hookline{margin-top:22px;padding-top:20px;border-top:1px solid var(--line);
+    font-style:italic;color:var(--ink);font-size:16.5px;line-height:1.5}
   .hookline .lab{display:block;font-style:normal;font-size:11px;font-weight:700;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--rose-deep);margin-bottom:6px}
+    text-transform:uppercase;color:var(--rose-deep);margin-bottom:8px}
 
-  .block{margin-top:22px}
-  .block h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 12px;font-weight:800;
-    display:flex;align-items:center;gap:8px}
-  .block.a h3{color:var(--green)} .block.d h3{color:var(--rose-deep)} .block.r h3{color:var(--champ)} .block.h h3{color:var(--rose-deep)}
-  .block ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
-  .block li{padding:12px 14px 12px 40px;position:relative;font-size:15px;line-height:1.5;
-    background:var(--surface);border:1px solid var(--line);border-radius:12px}
-  .block li::before{position:absolute;left:14px;top:12px;font-weight:800;font-size:15px}
-  .block.a li::before{content:"✓";color:var(--green)}
-  .block.d li::before{content:"✕";color:var(--rose-deep)}
-  .block.r li::before{content:"→";color:var(--champ)}
-  .block.h li{font-style:italic;color:var(--ink);background:color-mix(in srgb,var(--rose-soft) 45%,var(--surface))}
-  .block.h li::before{content:"🎬";font-style:normal}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:24px}
+  @media(max-width:600px){.cols{grid-template-columns:1fr;gap:16px}}
+  .colb h4{font-family:"Bodoni Moda",serif;font-weight:700;font-size:17px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+  .colb.a h4{color:var(--green)} .colb.d h4{color:var(--rose-deep)}
+  ul.clean{list-style:none;padding:0;margin:0}
+  ul.clean li{position:relative;padding:11px 0 11px 24px;font-size:15px;line-height:1.5;color:var(--ink-soft);border-bottom:1px solid var(--line)}
+  ul.clean li:last-child{border-bottom:none}
+  ul.clean li::before{position:absolute;left:0;top:11px;font-weight:800}
+  .colb.a ul.clean li::before{content:"✓";color:var(--green)}
+  .colb.d ul.clean li::before{content:"✕";color:var(--rose-deep)}
+
+  .sec-card{margin-top:24px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px 28px;box-shadow:var(--shadow)}
+  .sech{font-family:"Bodoni Moda",serif;font-weight:700;font-size:21px;margin:0 0 18px;display:flex;align-items:center;gap:10px}
+  .sech .ic{font-size:18px}
+  ol.recolist{list-style:none;counter-reset:r;padding:0;margin:0;display:grid;gap:15px}
+  ol.recolist li{counter-increment:r;position:relative;padding-left:54px;min-height:38px;font-size:15.5px;line-height:1.55;color:var(--ink-soft);display:flex;align-items:center}
+  ol.recolist li::before{content:counter(r,decimal-leading-zero);position:absolute;left:0;top:0;width:38px;height:38px;border-radius:11px;
+    background:var(--champ-soft);color:var(--champ);font-family:"Bodoni Moda",serif;font-weight:700;font-size:15px;display:grid;place-items:center}
+  .hookcards{display:grid;gap:12px}
+  .hookcard{display:flex;align-items:center;gap:14px;background:color-mix(in srgb,var(--rose-soft) 45%,var(--surface));
+    border:1px solid var(--line);border-radius:14px;padding:13px 13px 13px 18px}
+  .hookcard p{flex:1;margin:0;font-style:italic;font-size:15.5px;color:var(--ink);line-height:1.4}
+  .hookcard button{flex:none;background:var(--rose-deep);color:#fff;border:none;border-radius:100px;
+    font-family:"Hanken Grotesk",sans-serif;font-weight:600;font-size:12.5px;padding:8px 15px;cursor:pointer;white-space:nowrap;transition:opacity .2s}
+  .hookcard button:hover{opacity:.88}
+  .hookcard button.done{background:var(--green)}
 
   .divider{height:1px;background:var(--line);margin:26px 0}
 
@@ -231,27 +245,39 @@
     </div>
 
     <div class="result" id="result">
-      <div class="scorehead">
-        <div class="gauge">
-          <svg width="132" height="132" viewBox="0 0 132 132">
-            <circle cx="66" cy="66" r="52" fill="none" stroke="var(--line)" stroke-width="12"></circle>
-            <circle id="arc" cx="66" cy="66" r="52" fill="none" stroke="var(--green)" stroke-width="12"
-              stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"></circle>
-          </svg>
-          <div class="val"><span class="num g" id="num">0</span><span class="den">/ 100</span></div>
+      <div class="rcard">
+        <div class="scorehead">
+          <div class="gauge">
+            <svg width="144" height="144" viewBox="0 0 144 144">
+              <circle cx="72" cy="72" r="58" fill="none" stroke="var(--line)" stroke-width="12"></circle>
+              <circle id="arc" cx="72" cy="72" r="58" fill="none" stroke="var(--green)" stroke-width="12"
+                stroke-linecap="round" stroke-dasharray="364.4" stroke-dashoffset="364.4"></circle>
+            </svg>
+            <div class="val"><span class="num g" id="num">0</span><span class="den">/ 100</span></div>
+          </div>
+          <div class="scoremeta">
+            <span class="verdict g" id="verdict">—</span>
+            <div class="angle">Angle détecté</div>
+            <div class="angleval" id="angle">—</div>
+          </div>
         </div>
-        <div class="scoremeta">
-          <span class="verdict g" id="verdict">—</span>
-          <div class="angle">Angle détecté : <b id="angle">—</b></div>
-        </div>
+        <div class="hookline"><span class="lab">Le hook · 3 premières secondes</span><span id="hook"></span></div>
       </div>
 
-      <div class="hookline"><span class="lab">Le hook (3 premières secondes)</span><span id="hook"></span></div>
+      <div class="cols">
+        <div class="colb a"><h4>Atouts à garder</h4><ul class="clean" id="atouts"></ul></div>
+        <div class="colb d"><h4>À corriger</h4><ul class="clean" id="defauts"></ul></div>
+      </div>
 
-      <div class="block a"><h3>✅ Atouts à garder</h3><ul id="atouts"></ul></div>
-      <div class="block d"><h3>🔴 Ce qui fait perdre du budget</h3><ul id="defauts"></ul></div>
-      <div class="block r"><h3>🛠️ Corrections précises</h3><ul id="recos"></ul></div>
-      <div class="block h"><h3>🎬 Accroches prêtes à l'emploi</h3><ul id="hooks"></ul></div>
+      <div class="sec-card">
+        <h4 class="sech"><span class="ic">🛠️</span> Ton plan d'action précis</h4>
+        <ol class="recolist" id="recos"></ol>
+      </div>
+
+      <div class="sec-card">
+        <h4 class="sech"><span class="ic">🎬</span> Accroches prêtes à copier</h4>
+        <div class="hookcards" id="hooks"></div>
+      </div>
 
       <button class="btn again" id="again" type="button">Noter une autre pub</button>
     </div>
@@ -309,6 +335,22 @@
   drop.addEventListener('drop',function(ev){ var f=ev.dataTransfer.files[0]; if(f){ fileInput.files=ev.dataTransfer.files; setFile(f); } });
 
   function fill(id,arr){ var ul=$(id); ul.innerHTML=''; (arr||[]).forEach(function(t){ var li=document.createElement('li'); li.textContent=t; ul.appendChild(li); }); }
+  function fillHooks(arr){
+    var box=$('hooks'); box.innerHTML='';
+    (arr||[]).forEach(function(t){
+      var card=document.createElement('div'); card.className='hookcard';
+      var p=document.createElement('p'); p.textContent='« '+t+' »';
+      var b=document.createElement('button'); b.type='button'; b.textContent='Copier';
+      b.addEventListener('click',function(){
+        try{
+          navigator.clipboard.writeText(t);
+          b.textContent='Copié ✓'; b.classList.add('done');
+          setTimeout(function(){ b.textContent='Copier'; b.classList.remove('done'); },1600);
+        }catch(_){}
+      });
+      card.appendChild(p); card.appendChild(b); box.appendChild(card);
+    });
+  }
   function hideAll(){ [form,loading,warn,err,result].forEach(function(el){el.classList.remove('show');}); form.style.display='none'; loading.classList.remove('show'); warn.classList.remove('show'); err.classList.remove('show'); result.classList.remove('show'); }
 
   function pstep(){
@@ -359,7 +401,7 @@
     var s=Math.max(0,Math.min(100,d.score||0));
     var cls=s>=70?'g':(s>=45?'o':'r');
     // gauge
-    var arc=$('arc'), circ=326.7;
+    var arc=$('arc'), circ=364.4;
     arc.style.stroke='var(--'+(cls==='g'?'green':cls==='o'?'champ':'rose-deep')+')';
     arc.style.transition='stroke-dashoffset 1s cubic-bezier(.2,.7,.3,1)';
     arc.setAttribute('stroke-dashoffset',circ);
@@ -367,7 +409,7 @@
     var vd=$('verdict'); vd.className='verdict '+cls; vd.textContent=d.verdict||'';
     $('angle').textContent=d.angle||'—';
     $('hook').textContent=d.hook?('« '+d.hook+' »'):'—';
-    fill('atouts',d.atouts); fill('defauts',d.defauts); fill('recos',d.recos); fill('hooks',d.hooks_reecrits);
+    fill('atouts',d.atouts); fill('defauts',d.defauts); fill('recos',d.recos); fillHooks(d.hooks_reecrits);
     result.classList.add('show');
     // animate
     requestAnimationFrame(function(){
