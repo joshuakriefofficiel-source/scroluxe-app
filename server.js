@@ -171,6 +171,14 @@ app.get("/api/interest", async (_, res) => {
   }
 });
 
+// Tableau de bord privé : la page + la vérification du code d'accès.
+// Le code peut être surchargé via la variable d'environnement DASHBOARD_CODE.
+app.get("/board", (_, res) => res.sendFile(path.join(__dirname, "public", "board.html")));
+app.get("/api/board-auth", (req, res) => {
+  const CODE = process.env.DASHBOARD_CODE || "Mango5151";
+  res.json({ ok: String(req.query.code || "") === CODE });
+});
+
 // Tableau de bord privé : vérification du code d'accès (modifiable via env DASHBOARD_CODE).
 app.get("/api/board-auth", (req, res) => {
   const CODE = process.env.DASHBOARD_CODE || "scroluxe-boss";
