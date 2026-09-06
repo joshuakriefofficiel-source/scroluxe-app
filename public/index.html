@@ -3,154 +3,350 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Scroluxe — Note ta pub</title>
+<title>Scroluxe — Note ta pub beauté</title>
+<meta name="theme-color" content="#f5ebe6">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;0,6..96,900;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;0,6..96,900;1,6..96,500;1,6..96,700&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap">
 <style>
   :root{
-    --bg:#f5ebe6;--surface:#faf4f0;--ink:#2a1a20;--ink-soft:#5f4650;--muted:#8a7079;
-    --line:#e0d0c8;--rose:#d64d6e;--rose-deep:#b6304f;--rose-soft:#f5dbe0;--champ:#a9823f;
-    --green:#3f7d5e;--green-soft:#d9e8df;
+    --bg:#f4e9e3;--surface:#fbf6f2;--surface-2:#f0e2db;--ink:#281820;--ink-soft:#5f4650;--muted:#8a7079;
+    --line:#e3d3cb;--rose:#d64d6e;--rose-deep:#b6304f;--rose-soft:#f6dde2;--champ:#a9823f;--champ-soft:#efe1c6;
+    --green:#3f7d5e;--green-soft:#dcebe1;--shadow:0 30px 70px -35px rgba(40,24,32,.35);
   }
   @media (prefers-color-scheme:dark){:root{
-    --bg:#181017;--surface:#22161e;--ink:#f3e5e0;--ink-soft:#d3bcc4;--muted:#9c8189;
-    --line:#3a2831;--rose:#f0708c;--rose-deep:#f0708c;--rose-soft:#3d2029;--champ:#d6ac68;
-    --green:#6fb98f;--green-soft:#1c2d24;
+    --bg:#150e13;--surface:#22161e;--surface-2:#2b1d26;--ink:#f4e7e2;--ink-soft:#d6bfc7;--muted:#9c8189;
+    --line:#3a2831;--rose:#f0708c;--rose-deep:#f0708c;--rose-soft:#3d2029;--champ:#d6ac68;--champ-soft:#352815;
+    --green:#6fb98f;--green-soft:#1c2d24;--shadow:0 30px 80px -40px rgba(0,0,0,.8);
   }}
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hanken Grotesk",system-ui,sans-serif;
-    line-height:1.6;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:720px;margin:0 auto;padding:44px 24px 80px}
-  .logo{font-family:"Bodoni Moda",serif;font-weight:700;font-size:26px}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;color:var(--ink);font-family:"Hanken Grotesk",system-ui,sans-serif;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(60% 45% at 85% -5%, color-mix(in srgb,var(--rose) 22%,transparent), transparent 70%),
+      radial-gradient(55% 40% at 0% 10%, color-mix(in srgb,var(--champ) 18%,transparent), transparent 70%),
+      var(--bg);
+    background-attachment:fixed;}
+  .wrap{max-width:760px;margin:0 auto;padding:0 22px}
+  .serif{font-family:"Bodoni Moda",serif}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--rose-deep)}
+
+  /* header */
+  header.top{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+  .logo{font-family:"Bodoni Moda",serif;font-weight:700;font-size:24px;letter-spacing:.01em}
   .logo b{color:var(--rose-deep)}
-  h1{font-family:"Bodoni Moda",serif;font-weight:500;font-size:clamp(30px,5vw,44px);line-height:1.05;
-    margin:20px 0 10px;letter-spacing:-.01em}
+  .pill-top{font-size:12px;font-weight:600;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);
+    padding:6px 13px;border-radius:100px}
+  .pill-top b{color:var(--green)}
+
+  /* hero */
+  .hero{text-align:center;padding:26px 0 8px}
+  h1{font-family:"Bodoni Moda",serif;font-weight:500;font-size:clamp(34px,6.4vw,54px);line-height:1.02;
+    letter-spacing:-.015em;margin:8px auto 14px;max-width:15ch;text-wrap:balance}
   h1 em{font-style:italic;color:var(--rose-deep)}
-  .sub{color:var(--ink-soft);font-size:18px;margin:0 0 30px;max-width:52ch}
-  .drop{display:block;width:100%;border:2px dashed var(--line);border-radius:16px;background:var(--surface);padding:34px;text-align:center;
-    cursor:pointer;transition:border-color .2s}
-  form{display:block}
-  .drop .big{display:block}
-  .drop:hover,.drop.over{border-color:var(--rose)}
-  .drop p{margin:8px 0 0;color:var(--muted);font-size:14.5px}
-  .drop .big{font-family:"Bodoni Moda",serif;font-size:20px;color:var(--ink)}
+  .hero p{color:var(--ink-soft);font-size:18px;max-width:48ch;margin:0 auto 8px}
+
+  /* analyse chips */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:20px 0 4px}
+  .chip{font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);
+    padding:7px 14px;border-radius:100px}
+  .chip span{color:var(--rose-deep)}
+
+  /* upload card */
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);
+    padding:26px;margin:26px 0}
+  .drop{display:block;width:100%;border:2px dashed var(--line);border-radius:16px;background:var(--surface-2);
+    padding:36px 24px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s}
+  .drop:hover,.drop.over{border-color:var(--rose);background:color-mix(in srgb,var(--rose-soft) 40%,var(--surface-2))}
+  .drop .ico{font-size:30px;display:block;margin-bottom:8px}
+  .drop .big{font-family:"Bodoni Moda",serif;font-size:21px;display:block;color:var(--ink)}
+  .drop small{display:block;color:var(--muted);font-size:13.5px;margin-top:8px}
   input[type=file]{display:none}
-  .fname{margin-top:14px;font-weight:600;color:var(--rose-deep);font-size:15px;word-break:break-all}
-  .btn{margin-top:20px;width:100%;background:var(--rose-deep);color:#fff;border:none;border-radius:100px;
-    font-family:inherit;font-weight:600;font-size:17px;padding:16px;cursor:pointer;transition:transform .15s,opacity .2s}
-  .btn:hover:not(:disabled){transform:translateY(-2px)}
-  .btn:disabled{opacity:.55;cursor:not-allowed}
-  .note{margin-top:14px;font-size:13px;color:var(--muted);text-align:center}
-  .loading{display:none;text-align:center;padding:30px 0}
+  .fname{margin-top:14px;font-weight:600;color:var(--rose-deep);font-size:14.5px;word-break:break-all;display:none}
+  .fname.show{display:block}
+  .btn{margin-top:18px;width:100%;background:var(--rose-deep);color:#fff;border:none;border-radius:100px;
+    font-family:"Hanken Grotesk",sans-serif;font-weight:700;font-size:17px;padding:16px;cursor:pointer;
+    transition:transform .15s,box-shadow .2s,opacity .2s}
+  .btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 30px -12px var(--rose-deep)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
+  .fineprint{text-align:center;font-size:12.5px;color:var(--muted);margin-top:12px}
+
+  /* loading */
+  .loading{display:none;text-align:center;padding:20px 0 6px}
   .loading.show{display:block}
-  .spinner{width:38px;height:38px;border:4px solid var(--line);border-top-color:var(--rose);border-radius:50%;
-    margin:0 auto 14px;animation:spin 1s linear infinite}
+  .ring-load{width:52px;height:52px;margin:0 auto 16px;border:4px solid var(--line);border-top-color:var(--rose);
+    border-radius:50%;animation:spin 1s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-  @media (prefers-reduced-motion:reduce){.spinner{animation:none}}
-  .result{display:none;margin-top:28px}
-  .result.show{display:block}
-  .scorecard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px;text-align:center}
-  .score{font-family:"Bodoni Moda",serif;font-weight:900;font-size:64px;line-height:1;letter-spacing:-.02em}
-  .score small{font-size:24px;color:var(--muted);font-weight:400}
-  .verdict{display:inline-block;margin-top:10px;font-weight:600;font-size:15px;padding:6px 16px;border-radius:100px}
-  .verdict.g{background:var(--green-soft);color:var(--green)} .score.g{color:var(--green)}
-  .verdict.o{background:#f0e4cd;color:var(--champ)} .score.o{color:var(--champ)}
-  .verdict.r{background:var(--rose-soft);color:var(--rose-deep)} .score.r{color:var(--rose-deep)}
-  .hookline{margin-top:16px;font-style:italic;color:var(--ink-soft);font-size:16px}
-  .block{margin-top:20px}
-  .block h3{font-family:"Hanken Grotesk",sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
-    margin:0 0 10px;font-weight:700}
-  .block.a h3{color:var(--green)} .block.d h3{color:var(--rose-deep)} .block.r h3{color:var(--champ)}
-  .block ul{list-style:none;padding:0;margin:0;display:grid;gap:9px}
-  .block li{padding-left:24px;position:relative;font-size:15.5px;color:var(--ink-soft)}
-  .block.a li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
-  .block.d li::before{content:"✕";position:absolute;left:0;color:var(--rose-deep);font-weight:700}
-  .block.r li::before{content:"→";position:absolute;left:0;color:var(--champ);font-weight:700}
-  .block.h h3{color:var(--rose-deep)}
-  .block.h li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px 12px 34px;font-style:italic;color:var(--ink)}
-  .block.h li::before{content:"🎬";position:absolute;left:12px;font-style:normal}
-  .err{display:none;margin-top:20px;background:var(--rose-soft);color:var(--rose-deep);padding:16px 20px;
-    border-radius:12px;font-size:15px}
-  .err.show{display:block}
-  .again{margin-top:20px;background:transparent;border:1.5px solid var(--rose-deep);color:var(--rose-deep)}
+  .loading p{font-family:"Bodoni Moda",serif;font-style:italic;font-size:18px;color:var(--ink);margin:0}
+  .loading small{color:var(--muted);font-size:13px;display:block;margin-top:8px}
+  @media (prefers-reduced-motion:reduce){.ring-load{animation:none}}
+
+  /* error / overload */
+  .notice{display:none;margin-top:18px;border-radius:16px;padding:22px;text-align:center}
+  .notice.show{display:block}
+  .notice.warn{background:var(--champ-soft);border:1px solid color-mix(in srgb,var(--champ) 35%,transparent)}
+  .notice.err{background:var(--rose-soft);border:1px solid color-mix(in srgb,var(--rose) 35%,transparent)}
+  .notice .ttl{font-family:"Bodoni Moda",serif;font-size:19px;margin-bottom:6px}
+  .notice.warn .ttl{color:var(--champ)} .notice.err .ttl{color:var(--rose-deep)}
+  .notice p{margin:0 0 14px;color:var(--ink-soft);font-size:15px}
+  .notice .btn{width:auto;padding:11px 26px;font-size:15px;display:inline-block}
+
+  /* result */
+  .result{display:none}
+  .result.show{display:block;animation:rise .5s ease}
+  @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.result.show{animation:none}}
+  .scorehead{display:flex;align-items:center;gap:22px;flex-wrap:wrap;justify-content:center;text-align:center}
+  @media(min-width:520px){.scorehead{justify-content:flex-start;text-align:left}}
+  .gauge{position:relative;width:132px;height:132px;flex:none}
+  .gauge svg{transform:rotate(-90deg)}
+  .gauge .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .gauge .num{font-family:"Bodoni Moda",serif;font-weight:900;font-size:40px;line-height:1}
+  .gauge .den{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:.05em}
+  .scoremeta{flex:1;min-width:200px}
+  .verdict{display:inline-block;font-weight:700;font-size:14px;padding:6px 15px;border-radius:100px;margin-bottom:10px}
+  .verdict.g{background:var(--green-soft);color:var(--green)} .num.g{color:var(--green)}
+  .verdict.o{background:var(--champ-soft);color:var(--champ)} .num.o{color:var(--champ)}
+  .verdict.r{background:var(--rose-soft);color:var(--rose-deep)} .num.r{color:var(--rose-deep)}
+  .angle{font-size:13px;color:var(--muted);margin-top:2px}
+  .angle b{color:var(--ink-soft);font-weight:600}
+  .hookline{margin:18px 0 2px;padding:16px 18px;background:var(--surface-2);border-radius:12px;
+    font-style:italic;color:var(--ink);font-size:16px;line-height:1.45}
+  .hookline .lab{display:block;font-style:normal;font-size:11px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--rose-deep);margin-bottom:6px}
+
+  .block{margin-top:22px}
+  .block h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 12px;font-weight:800;
+    display:flex;align-items:center;gap:8px}
+  .block.a h3{color:var(--green)} .block.d h3{color:var(--rose-deep)} .block.r h3{color:var(--champ)} .block.h h3{color:var(--rose-deep)}
+  .block ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+  .block li{padding:12px 14px 12px 40px;position:relative;font-size:15px;line-height:1.5;
+    background:var(--surface);border:1px solid var(--line);border-radius:12px}
+  .block li::before{position:absolute;left:14px;top:12px;font-weight:800;font-size:15px}
+  .block.a li::before{content:"✓";color:var(--green)}
+  .block.d li::before{content:"✕";color:var(--rose-deep)}
+  .block.r li::before{content:"→";color:var(--champ)}
+  .block.h li{font-style:italic;color:var(--ink);background:color-mix(in srgb,var(--rose-soft) 45%,var(--surface))}
+  .block.h li::before{content:"🎬";font-style:normal}
+
+  .divider{height:1px;background:var(--line);margin:26px 0}
+
+  /* example preview */
+  .example{margin-top:12px}
+  .example .tag{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    text-align:center;display:block;margin-bottom:12px}
+  .mini{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;
+    gap:18px;align-items:center}
+  .mini .mgauge{width:76px;height:76px;flex:none;border-radius:50%;display:grid;place-items:center;
+    background:conic-gradient(var(--green) 0 295deg,var(--line) 295deg 360deg)}
+  .mini .mgauge span{width:60px;height:60px;border-radius:50%;background:var(--surface);display:grid;place-items:center;
+    font-family:"Bodoni Moda",serif;font-weight:900;font-size:24px;color:var(--green)}
+  .mini .mtxt{font-size:14px;color:var(--ink-soft)}
+  .mini .mtxt b{color:var(--ink);font-family:"Bodoni Moda",serif;font-weight:700;font-size:16px;display:block;margin-bottom:3px}
+
+  /* steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+  @media(max-width:560px){.steps{grid-template-columns:1fr}}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center}
+  .step .n{font-family:"Bodoni Moda",serif;font-style:italic;color:var(--rose-deep);font-size:18px}
+  .step b{display:block;margin:6px 0 4px;font-size:15px}
+  .step small{color:var(--muted);font-size:13px;line-height:1.4}
+
+  footer{text-align:center;padding:30px 0 44px;color:var(--muted);font-size:12.5px}
+  footer .logo{font-size:18px;margin-bottom:6px}
+  .again{margin-top:24px}
+  .sechead{text-align:center;margin-bottom:6px}
+  .sechead h2{font-family:"Bodoni Moda",serif;font-weight:500;font-size:24px;margin:0 0 4px}
+  .sechead p{color:var(--muted);font-size:14px;margin:0}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="logo">Scro<b>luxe</b></div>
-  <h1>Uploade ta pub. <em>Sache si elle accroche.</em></h1>
-  <p class="sub">L'IA regarde ta vidéo — hook, rythme, angle, démarcation — et te donne un score sur 100 avec ce qu'il faut corriger. Spécialisé beauté.</p>
+  <header class="top">
+    <div class="logo">Scro<b>luxe</b></div>
+    <div class="pill-top">Pré-test créa · <b>beauté</b></div>
+  </header>
 
-  <form id="form">
-    <label class="drop" id="drop">
-      <span class="big">📎 Choisis ou glisse ta vidéo ici</span>
-      <p>MP4, MOV… jusqu'à 100 Mo · idéalement moins de 3 min</p>
-      <input type="file" id="file" accept="video/*" required>
-      <div class="fname" id="fname"></div>
-    </label>
-    <button class="btn" id="submit" type="submit" disabled>Noter ma pub</button>
-    <p class="note">L'analyse prend ~20 à 60 secondes selon la longueur.</p>
-  </form>
-
-  <div class="loading" id="loading">
-    <div class="spinner"></div>
-    <p>Scroluxe regarde ta pub…</p>
-  </div>
-
-  <div class="err" id="err"></div>
-
-  <div class="result" id="result">
-    <div class="scorecard">
-      <div class="score" id="score">—</div>
-      <div class="verdict" id="verdict">—</div>
-      <div class="hookline" id="hook"></div>
+  <section class="hero">
+    <span class="eyebrow">Note ta pub avant de dépenser</span>
+    <h1>Ta pub va-t-elle <em>arrêter le scroll ?</em></h1>
+    <p>Uploade ta vidéo. L'IA la regarde en entier — hook, rythme, angle, démarcation — et te dit quoi corriger, avec des accroches prêtes à l'emploi.</p>
+    <div class="chips">
+      <div class="chip"><span>◆</span> Hook</div>
+      <div class="chip"><span>◆</span> Rythme</div>
+      <div class="chip"><span>◆</span> Angle</div>
+      <div class="chip"><span>◆</span> Contraste</div>
+      <div class="chip"><span>◆</span> Produit</div>
+      <div class="chip"><span>◆</span> Démarcation</div>
     </div>
-    <div class="block a"><h3>✅ Atouts</h3><ul id="atouts"></ul></div>
-    <div class="block d"><h3>🔴 Défauts</h3><ul id="defauts"></ul></div>
-    <div class="block r"><h3>🛠️ Corrections précises</h3><ul id="recos"></ul></div>
-    <div class="block h"><h3>🎬 Accroches prêtes à l'emploi</h3><ul id="hooks"></ul></div>
-    <button class="btn again" id="again" type="button">Noter une autre pub</button>
-  </div>
+  </section>
+
+  <section class="panel" id="panel">
+    <form id="form">
+      <label class="drop" id="drop">
+        <span class="ico">🎬</span>
+        <span class="big">Choisis ou glisse ta vidéo</span>
+        <small>MP4, MOV… jusqu'à 100 Mo · idéalement moins de 3 min</small>
+        <input type="file" id="file" accept="video/*" required>
+        <div class="fname" id="fname"></div>
+      </label>
+      <button class="btn" id="submit" type="submit" disabled>Noter ma pub</button>
+      <p class="fineprint">Analyse en ~30 à 90 s · gratuit</p>
+    </form>
+
+    <div class="loading" id="loading">
+      <div class="ring-load"></div>
+      <p id="loadmsg">Scroluxe regarde ta pub…</p>
+      <small>La 1ʳᵉ analyse peut être un peu longue (réveil du serveur). Reste ici.</small>
+    </div>
+
+    <div class="notice warn" id="warn">
+      <div class="ttl">🕐 L'IA est très demandée là</div>
+      <p>Gemini est momentanément surchargé. C'est temporaire — réessaie dans quelques secondes.</p>
+      <button class="btn" id="retryWarn" type="button">Réessayer</button>
+    </div>
+
+    <div class="notice err" id="err">
+      <div class="ttl">Oups, un souci</div>
+      <p id="errmsg"></p>
+      <button class="btn" id="retryErr" type="button">Réessayer</button>
+    </div>
+
+    <div class="result" id="result">
+      <div class="scorehead">
+        <div class="gauge">
+          <svg width="132" height="132" viewBox="0 0 132 132">
+            <circle cx="66" cy="66" r="52" fill="none" stroke="var(--line)" stroke-width="12"></circle>
+            <circle id="arc" cx="66" cy="66" r="52" fill="none" stroke="var(--green)" stroke-width="12"
+              stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"></circle>
+          </svg>
+          <div class="val"><span class="num g" id="num">0</span><span class="den">/ 100</span></div>
+        </div>
+        <div class="scoremeta">
+          <span class="verdict g" id="verdict">—</span>
+          <div class="angle">Angle détecté : <b id="angle">—</b></div>
+        </div>
+      </div>
+
+      <div class="hookline"><span class="lab">Le hook (3 premières secondes)</span><span id="hook"></span></div>
+
+      <div class="block a"><h3>✅ Atouts à garder</h3><ul id="atouts"></ul></div>
+      <div class="block d"><h3>🔴 Ce qui fait perdre du budget</h3><ul id="defauts"></ul></div>
+      <div class="block r"><h3>🛠️ Corrections précises</h3><ul id="recos"></ul></div>
+      <div class="block h"><h3>🎬 Accroches prêtes à l'emploi</h3><ul id="hooks"></ul></div>
+
+      <button class="btn again" id="again" type="button">Noter une autre pub</button>
+    </div>
+  </section>
+
+  <!-- Aperçu / réassurance quand pas de résultat -->
+  <section id="teaser">
+    <div class="example">
+      <span class="tag">— Aperçu d'un rapport —</span>
+      <div class="mini">
+        <div class="mgauge"><span>82</span></div>
+        <div class="mtxt"><b>« Arrête le scroll »</b>Score, verdict, atouts, défauts, corrections précises et 3 accroches réécrites — livrés en moins d'une minute.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sechead"><h2 class="serif">Comment ça marche</h2><p>Trois étapes, zéro budget dépensé.</p></div>
+    <div class="steps">
+      <div class="step"><div class="n">I.</div><b>Uploade</b><small>Ta pub vidéo, en un glisser-déposer.</small></div>
+      <div class="step"><div class="n">II.</div><b>L'IA regarde</b><small>Elle analyse hook, rythme, angle, démarcation.</small></div>
+      <div class="step"><div class="n">III.</div><b>Tu corriges</b><small>Score + recos exactes + accroches prêtes.</small></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="logo">Scro<b>luxe</b></div>
+    Le pré-test créa des marques beauté · On ne promet pas de ventes — on dit si ta pub accroche.
+  </footer>
 </div>
 
 <script>
-  var fileInput=document.getElementById('file'), drop=document.getElementById('drop'),
-      fname=document.getElementById('fname'), submit=document.getElementById('submit'),
-      form=document.getElementById('form'), loading=document.getElementById('loading'),
-      result=document.getElementById('result'), err=document.getElementById('err');
+  var $=function(id){return document.getElementById(id);};
+  var fileInput=$('file'),drop=$('drop'),fname=$('fname'),submit=$('submit'),form=$('form'),
+      loading=$('loading'),loadmsg=$('loadmsg'),result=$('result'),warn=$('warn'),err=$('err'),
+      teaser=$('teaser'),lastFile=null,msgTimer=null,ctrl=null;
 
-  function setFile(f){ if(f){ fname.textContent='🎬 '+f.name; submit.disabled=false; } }
-  fileInput.addEventListener('change', function(){ setFile(fileInput.files[0]); });
+  var LOAD_MSGS=["Scroluxe regarde ta pub…","Analyse du hook (0-3s)…","Mesure du rythme et du montage…",
+    "Détection de l'angle…","Comparaison aux codes gagnants…","Rédaction des recommandations…"];
+
+  function setFile(f){ if(f){ lastFile=f; fname.textContent='🎬 '+f.name; fname.classList.add('show'); submit.disabled=false; } }
+  fileInput.addEventListener('change',function(){ setFile(fileInput.files[0]); });
   ['dragover','dragenter'].forEach(function(e){ drop.addEventListener(e,function(ev){ev.preventDefault();drop.classList.add('over');}); });
   ['dragleave','drop'].forEach(function(e){ drop.addEventListener(e,function(ev){ev.preventDefault();drop.classList.remove('over');}); });
-  drop.addEventListener('drop', function(ev){ var f=ev.dataTransfer.files[0]; if(f){ fileInput.files=ev.dataTransfer.files; setFile(f); } });
+  drop.addEventListener('drop',function(ev){ var f=ev.dataTransfer.files[0]; if(f){ fileInput.files=ev.dataTransfer.files; setFile(f); } });
 
-  function fill(id, arr){ var ul=document.getElementById(id); ul.innerHTML=''; (arr||[]).forEach(function(t){ var li=document.createElement('li'); li.textContent=t; ul.appendChild(li); }); }
+  function fill(id,arr){ var ul=$(id); ul.innerHTML=''; (arr||[]).forEach(function(t){ var li=document.createElement('li'); li.textContent=t; ul.appendChild(li); }); }
+  function hideAll(){ [form,loading,warn,err,result].forEach(function(el){el.classList.remove('show');}); form.style.display='none'; loading.classList.remove('show'); warn.classList.remove('show'); err.classList.remove('show'); result.classList.remove('show'); }
 
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    if(!fileInput.files[0]) return;
-    err.classList.remove('show'); result.classList.remove('show'); form.style.display='none'; loading.classList.add('show');
-    var fd=new FormData(); fd.append('video', fileInput.files[0]);
-    fetch('/api/analyze',{method:'POST',body:fd})
+  function startLoading(){
+    hideAll(); teaser.style.display='none'; loading.classList.add('show');
+    var i=0; loadmsg.textContent=LOAD_MSGS[0];
+    clearInterval(msgTimer);
+    msgTimer=setInterval(function(){ i=(i+1)%LOAD_MSGS.length; loadmsg.textContent=LOAD_MSGS[i]; },4500);
+  }
+  function stopLoading(){ clearInterval(msgTimer); loading.classList.remove('show'); }
+
+  function analyze(){
+    if(!lastFile) return;
+    startLoading();
+    var fd=new FormData(); fd.append('video',lastFile);
+    ctrl=new AbortController();
+    var to=setTimeout(function(){ ctrl.abort(); },200000);
+    fetch('/api/analyze',{method:'POST',body:fd,signal:ctrl.signal})
       .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
       .then(function(res){
-        loading.classList.remove('show');
-        if(!res.ok){ err.textContent='⚠️ '+(res.d.error||'Erreur inconnue'); err.classList.add('show'); form.style.display='block'; return; }
-        var d=res.d, s=d.score||0;
-        var cls = s>=70?'g':(s>=45?'o':'r');
-        var sc=document.getElementById('score'); sc.className='score '+cls; sc.innerHTML=s+'<small>/100</small>';
-        var vd=document.getElementById('verdict'); vd.className='verdict '+cls; vd.textContent=d.verdict||'';
-        document.getElementById('hook').textContent=d.hook?('« '+d.hook+' »'):'';
-        fill('atouts',d.atouts); fill('defauts',d.defauts); fill('recos',d.recos); fill('hooks',d.hooks_reecrits);
-        result.classList.add('show');
+        clearTimeout(to); stopLoading();
+        if(!res.ok){
+          var m=(res.d&&res.d.error)||'';
+          if(/503|429|overload|high demand|surcharg|demand/i.test(m)){ warn.classList.add('show'); }
+          else { $('errmsg').textContent=m||"Erreur inconnue. Réessaie."; err.classList.add('show'); }
+          return;
+        }
+        showResult(res.d);
       })
-      .catch(function(){ loading.classList.remove('show'); err.textContent='⚠️ Problème réseau, réessaie.'; err.classList.add('show'); form.style.display='block'; });
-  });
+      .catch(function(e){
+        clearTimeout(to); stopLoading();
+        if(e&&e.name==='AbortError'){ warn.classList.add('show'); }
+        else { $('errmsg').textContent="Problème réseau. Vérifie ta connexion et réessaie."; err.classList.add('show'); }
+      });
+  }
 
-  document.getElementById('again').addEventListener('click', function(){
-    result.classList.remove('show'); form.style.display='block'; form.reset(); fname.textContent=''; submit.disabled=true;
+  function showResult(d){
+    var s=Math.max(0,Math.min(100,d.score||0));
+    var cls=s>=70?'g':(s>=45?'o':'r');
+    // gauge
+    var arc=$('arc'), circ=326.7;
+    arc.style.stroke='var(--'+(cls==='g'?'green':cls==='o'?'champ':'rose-deep')+')';
+    arc.style.transition='stroke-dashoffset 1s cubic-bezier(.2,.7,.3,1)';
+    arc.setAttribute('stroke-dashoffset',circ);
+    var num=$('num'); num.className='num '+cls; num.textContent='0';
+    var vd=$('verdict'); vd.className='verdict '+cls; vd.textContent=d.verdict||'';
+    $('angle').textContent=d.angle||'—';
+    $('hook').textContent=d.hook?('« '+d.hook+' »'):'—';
+    fill('atouts',d.atouts); fill('defauts',d.defauts); fill('recos',d.recos); fill('hooks',d.hooks_reecrits);
+    result.classList.add('show');
+    // animate
+    requestAnimationFrame(function(){
+      arc.setAttribute('stroke-dashoffset', circ*(1-s/100));
+      var start=null;
+      function step(ts){ if(!start)start=ts; var p=Math.min(1,(ts-start)/1000); num.textContent=Math.round(p*s); if(p<1)requestAnimationFrame(step); }
+      requestAnimationFrame(step);
+    });
+  }
+
+  form.addEventListener('submit',function(e){ e.preventDefault(); analyze(); });
+  $('retryWarn').addEventListener('click',analyze);
+  $('retryErr').addEventListener('click',analyze);
+  $('again').addEventListener('click',function(){
+    hideAll(); form.reset(); fname.classList.remove('show'); fname.textContent=''; submit.disabled=true;
+    lastFile=null; form.style.display='block'; teaser.style.display='block';
   });
 </script>
 </body>
