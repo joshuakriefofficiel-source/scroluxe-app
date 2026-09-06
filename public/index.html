@@ -83,6 +83,10 @@
   @keyframes spin{to{transform:rotate(360deg)}}
   .loading p{font-family:"Bodoni Moda",serif;font-style:italic;font-size:18px;color:var(--ink);margin:0}
   .loading small{color:var(--muted);font-size:13px;display:block;margin-top:8px}
+  .pbar{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin:16px auto 8px;max-width:420px}
+  .pbar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--rose-deep),var(--champ));border-radius:6px;transition:width .6s ease}
+  .pmeta{display:flex;justify-content:space-between;max-width:420px;margin:0 auto 4px;font-size:13.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .pmeta .pct{font-weight:700;color:var(--rose-deep)}
   @media (prefers-reduced-motion:reduce){.ring-load{animation:none}}
 
   /* error / overload */
@@ -201,7 +205,9 @@
     <div class="loading" id="loading">
       <div class="ring-load"></div>
       <p id="loadmsg">Scroluxe regarde ta pub…</p>
-      <small>La 1ʳᵉ analyse peut être un peu longue (réveil du serveur). Reste ici.</small>
+      <div class="pmeta"><span class="pct" id="ppct">0 % terminé</span><span id="peta">estimation…</span></div>
+      <div class="pbar"><i id="pfill"></i></div>
+      <small>La 1ʳᵉ analyse peut être plus longue (réveil du serveur). Reste sur la page.</small>
     </div>
 
     <div class="notice warn" id="warn">
@@ -273,7 +279,7 @@
   var $=function(id){return document.getElementById(id);};
   var fileInput=$('file'),drop=$('drop'),fname=$('fname'),submit=$('submit'),form=$('form'),
       loading=$('loading'),loadmsg=$('loadmsg'),result=$('result'),warn=$('warn'),err=$('err'),
-      teaser=$('teaser'),lastFile=null,msgTimer=null,ctrl=null;
+      teaser=$('teaser'),lastFile=null,progTimer=null,ctrl=null,startTime=0,EST=75;
 
   var LOAD_MSGS=["Scroluxe regarde ta pub…","Analyse du hook (0-3s)…","Mesure du rythme et du montage…",
     "Détection de l'angle…","Comparaison aux codes gagnants…","Rédaction des recommandations…"];
@@ -287,13 +293,22 @@
   function fill(id,arr){ var ul=$(id); ul.innerHTML=''; (arr||[]).forEach(function(t){ var li=document.createElement('li'); li.textContent=t; ul.appendChild(li); }); }
   function hideAll(){ [form,loading,warn,err,result].forEach(function(el){el.classList.remove('show');}); form.style.display='none'; loading.classList.remove('show'); warn.classList.remove('show'); err.classList.remove('show'); result.classList.remove('show'); }
 
+  function pstep(){
+    var el=(Date.now()-startTime)/1000;
+    var p=Math.min(95, 95*(1-Math.exp(-el/28))); // avance vite, puis ralentit, plafonne à 95%
+    $('pfill').style.width=p+'%';
+    $('ppct').textContent=Math.round(p)+' % terminé';
+    var eta=Math.max(0, EST-el);
+    $('peta').textContent = el<3 ? 'estimation…' : (eta>2 ? '~'+Math.ceil(eta)+' s restantes' : 'bientôt fini…');
+    loadmsg.textContent = p<18?LOAD_MSGS[0] : p<40?LOAD_MSGS[1] : p<60?LOAD_MSGS[2] : p<78?LOAD_MSGS[3] : p<90?LOAD_MSGS[4] : LOAD_MSGS[5];
+  }
   function startLoading(){
     hideAll(); teaser.style.display='none'; loading.classList.add('show');
-    var i=0; loadmsg.textContent=LOAD_MSGS[0];
-    clearInterval(msgTimer);
-    msgTimer=setInterval(function(){ i=(i+1)%LOAD_MSGS.length; loadmsg.textContent=LOAD_MSGS[i]; },4500);
+    startTime=Date.now(); $('pfill').style.width='0%';
+    clearInterval(progTimer); pstep(); progTimer=setInterval(pstep,500);
   }
-  function stopLoading(){ clearInterval(msgTimer); loading.classList.remove('show'); }
+  function stopLoading(){ clearInterval(progTimer); loading.classList.remove('show'); }
+  function finishBar(){ clearInterval(progTimer); $('pfill').style.width='100%'; $('ppct').textContent='100 % terminé'; $('peta').textContent='Terminé ✓'; }
 
   function analyze(){
     if(!lastFile) return;
@@ -304,14 +319,16 @@
     fetch('/api/analyze',{method:'POST',body:fd,signal:ctrl.signal})
       .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
       .then(function(res){
-        clearTimeout(to); stopLoading();
+        clearTimeout(to);
         if(!res.ok){
+          stopLoading();
           var m=(res.d&&res.d.error)||'';
           if(/503|429|overload|high demand|surcharg|demand/i.test(m)){ warn.classList.add('show'); }
           else { $('errmsg').textContent=m||"Erreur inconnue. Réessaie."; err.classList.add('show'); }
           return;
         }
-        showResult(res.d);
+        finishBar();
+        setTimeout(function(){ loading.classList.remove('show'); showResult(res.d); }, 550);
       })
       .catch(function(e){
         clearTimeout(to); stopLoading();
