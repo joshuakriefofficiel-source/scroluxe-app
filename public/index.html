@@ -12,23 +12,25 @@
   :root{
     --bg:#f4e9e3;--surface:#fbf6f2;--surface-2:#f0e2db;--ink:#281820;--ink-soft:#5f4650;--muted:#8a7079;
     --line:#e3d3cb;--rose:#d64d6e;--rose-deep:#b6304f;--rose-soft:#f6dde2;--champ:#a9823f;--champ-soft:#efe1c6;
-    --green:#3f7d5e;--green-soft:#dcebe1;--shadow:0 30px 70px -35px rgba(40,24,32,.35);
+    --green:#3f7d5e;--green-soft:#dcebe1;--shadow:0 30px 70px -35px rgba(40,24,32,.35);--hero-ov1:rgba(244,233,227,.52);--hero-ov2:rgba(244,233,227,.90);
   }
   @media (prefers-color-scheme:dark){:root{
     --bg:#150e13;--surface:#22161e;--surface-2:#2b1d26;--ink:#f4e7e2;--ink-soft:#d6bfc7;--muted:#9c8189;
     --line:#3a2831;--rose:#f0708c;--rose-deep:#f0708c;--rose-soft:#3d2029;--champ:#d6ac68;--champ-soft:#352815;
-    --green:#6fb98f;--green-soft:#1c2d24;--shadow:0 30px 80px -40px rgba(0,0,0,.8);
+    --green:#6fb98f;--green-soft:#1c2d24;--shadow:0 30px 80px -40px rgba(0,0,0,.8);--hero-ov1:rgba(21,14,19,.55);--hero-ov2:rgba(21,14,19,.92);
   }}
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
-  body{margin:0;color:var(--ink);font-family:"Hanken Grotesk",system-ui,sans-serif;line-height:1.6;
+  body{margin:0;position:relative;color:var(--ink);font-family:"Hanken Grotesk",system-ui,sans-serif;line-height:1.6;
     -webkit-font-smoothing:antialiased;
     background:
       radial-gradient(60% 45% at 85% -5%, color-mix(in srgb,var(--rose) 22%,transparent), transparent 70%),
       radial-gradient(55% 40% at 0% 10%, color-mix(in srgb,var(--champ) 18%,transparent), transparent 70%),
       var(--bg);
     background-attachment:fixed;}
-  .wrap{max-width:760px;margin:0 auto;padding:0 22px}
+  body::before{content:"";position:absolute;top:0;left:0;right:0;height:560px;z-index:0;pointer-events:none;
+    background:linear-gradient(180deg,var(--hero-ov1),var(--hero-ov2) 58%,var(--bg) 97%), url('hero.jpg') center 42%/cover no-repeat;}
+  .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 22px}
   .serif{font-family:"Bodoni Moda",serif}
   .eyebrow{font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--rose-deep)}
 
