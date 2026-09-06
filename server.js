@@ -94,27 +94,31 @@ app.post("/api/analyze", upload.single("video"), async (req, res) => {
     }
 
     // 3) Demander l'analyse
-    const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
     const parts = [
       { fileData: { fileUri: file.uri, mimeType: file.mimeType } },
       { text: PROMPT },
     ];
-    // Ré-essai automatique si Gemini est temporairement surchargé (503) ou limité (429).
-    let result;
-    for (let attempt = 0; attempt < 4; attempt++) {
-      try {
-        result = await model.generateContent(parts);
-        break;
-      } catch (e) {
-        const msg = String(e?.message || "");
-        const retryable = /\b(503|429)\b|overload|high demand|unavailable|rate|quota/i.test(msg);
-        if (attempt < 3 && retryable) {
-          await sleep(5000 * (attempt + 1));
-          continue;
+    // Plusieurs modèles en secours : si le plus récent est surchargé, on bascule
+    // automatiquement sur un autre, plus disponible. L'utilisateur ne voit rien.
+    const MODELS = ["gemini-3.6-flash", "gemini-flash-latest", "gemini-2.5-flash"];
+    let result, lastErr;
+    for (const modelName of MODELS) {
+      const model = genAI.getGenerativeModel({ model: modelName });
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          result = await model.generateContent(parts);
+          break;
+        } catch (e) {
+          lastErr = e;
+          const msg = String(e?.message || "");
+          const overloaded = /\b(503|429)\b|overload|high demand|unavailable|rate|quota/i.test(msg);
+          if (overloaded && attempt === 0) { await sleep(3000); continue; } // petit réessai
+          break; // sinon on tente le modèle suivant
         }
-        throw e;
       }
+      if (result) break;
     }
+    if (!result) throw lastErr || new Error("Aucun modèle disponible pour le moment");
 
     cleanup();
 
