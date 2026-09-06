@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scroluxe · Tableau de bord</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;0,6..96,900;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --bg:#150e13;--surface:#22161e;--surface-2:#2b1d26;--ink:#f4e7e2;--ink-soft:#d6bfc7;--muted:#9c8189;
+    --line:#3a2831;--rose:#f0708c;--rose-deep:#f0708c;--rose-soft:#3d2029;--champ:#d6ac68;--champ-soft:#352815;
+    --green:#6fb98f;--green-soft:#1c2d24;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;color:var(--ink);font-family:"Hanken Grotesk",system-ui,sans-serif;line-height:1.6;
+    -webkit-font-smoothing:antialiased;min-height:100vh;
+    background:radial-gradient(60% 40% at 85% -5%,color-mix(in srgb,var(--rose) 20%,transparent),transparent 70%),
+      radial-gradient(50% 40% at 0% 5%,color-mix(in srgb,var(--champ) 16%,transparent),transparent 70%),var(--bg)}
+  .wrap{max-width:820px;margin:0 auto;padding:0 22px}
+  .logo{font-family:"Bodoni Moda",serif;font-weight:700;font-size:24px}
+  .logo b{color:var(--rose)}
+  .btn{background:var(--rose-deep);color:#fff;border:none;border-radius:100px;font-family:inherit;font-weight:700;
+    font-size:15px;padding:13px 22px;cursor:pointer;transition:transform .15s,opacity .2s}
+  .btn:hover{transform:translateY(-2px)}
+  [hidden]{display:none!important}
+
+  /* lock */
+  .lock{min-height:100vh;display:flex;align-items:center;justify-content:center}
+  .lockcard{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:40px 34px;text-align:center;max-width:380px;width:100%;
+    box-shadow:0 30px 80px -40px rgba(0,0,0,.8)}
+  .lockic{font-size:34px;margin:18px 0 6px}
+  .lockcard h1{font-family:"Bodoni Moda",serif;font-weight:500;font-size:30px;margin:0 0 6px}
+  .lockcard p{color:var(--muted);font-size:15px;margin:0 0 22px}
+  .lockcard input{width:100%;font-family:inherit;font-size:16px;padding:14px 18px;border:1.5px solid var(--line);
+    border-radius:100px;background:var(--surface-2);color:var(--ink);text-align:center;margin-bottom:12px}
+  .lockcard input:focus-visible{outline:none;border-color:var(--rose)}
+  .lockcard .btn{width:100%}
+  .lockerr{color:var(--rose);font-size:14px;font-weight:600;margin-top:12px}
+
+  /* dashboard */
+  .dash{padding:34px 0 70px}
+  .top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:6px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--rose)}
+  h1.title{font-family:"Bodoni Moda",serif;font-weight:500;font-size:clamp(30px,5vw,42px);margin:8px 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 26px}
+  .refresh{background:var(--surface);border:1px solid var(--line);color:var(--ink-soft);border-radius:100px;
+    padding:9px 16px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+  .refresh:hover{border-color:var(--rose)}
+
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:620px){.tiles{grid-template-columns:1fr}}
+  .tile{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 22px;box-shadow:0 20px 50px -34px rgba(0,0,0,.7)}
+  .tile .ic{font-size:20px}
+  .tile .val{font-family:"Bodoni Moda",serif;font-weight:900;font-size:clamp(36px,6vw,52px);line-height:1;margin:12px 0 4px;
+    font-variant-numeric:tabular-nums}
+  .tile.a .val{color:var(--rose)} .tile.b .val{color:var(--champ)} .tile.c .val{color:var(--green)}
+  .tile .lab{font-size:13.5px;color:var(--muted);font-weight:600}
+
+  .decis{margin-top:20px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px 28px}
+  .decis h3{font-family:"Bodoni Moda",serif;font-weight:700;font-size:20px;margin:0 0 6px}
+  .decis p{color:var(--ink-soft);font-size:15px;margin:0 0 16px}
+  .goalbar{height:14px;background:var(--line);border-radius:8px;overflow:hidden}
+  .goalbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--rose-deep),var(--champ));border-radius:8px;transition:width .8s cubic-bezier(.2,.7,.3,1)}
+  .goalmeta{display:flex;justify-content:space-between;margin-top:10px;font-size:13.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .verdict{display:inline-block;margin-top:16px;font-weight:700;font-size:14px;padding:8px 18px;border-radius:100px}
+  .verdict.go{background:var(--green-soft);color:var(--green)}
+  .verdict.wait{background:var(--champ-soft);color:var(--champ)}
+
+  .links{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:620px){.links{grid-template-columns:1fr}}
+  .lk{display:block;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 22px;text-decoration:none;color:inherit;transition:border-color .2s}
+  .lk:hover{border-color:var(--rose)}
+  .lk .lkt{font-family:"Bodoni Moda",serif;font-weight:700;font-size:17px;margin-bottom:4px}
+  .lk .lkd{font-size:13.5px;color:var(--muted)}
+  .lk .arr{color:var(--rose)}
+  footer{margin-top:30px;color:var(--muted);font-size:12.5px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ÉCRAN DE CONNEXION -->
+  <div class="lock" id="lock">
+    <div class="lockcard">
+      <div class="logo">Scro<b>luxe</b></div>
+      <div class="lockic">🔒</div>
+      <h1>Espace privé</h1>
+      <p>Ton tableau de bord, rien qu'à toi.</p>
+      <form id="lockform">
+        <input type="password" id="code" placeholder="Code d'accès" autocomplete="off" autofocus>
+        <button class="btn" type="submit">Entrer</button>
+      </form>
+      <div class="lockerr" id="lockerr" hidden>Code incorrect.</div>
+    </div>
+  </div>
+
+  <!-- TABLEAU DE BORD -->
+  <div class="dash" id="dash" hidden>
+    <div class="top">
+      <div>
+        <span class="eyebrow">Tableau de bord privé</span>
+        <h1 class="title">Ton pouls Scroluxe</h1>
+        <p class="sub" id="updated">Chargement…</p>
+      </div>
+      <button class="refresh" id="refresh">↻ Rafraîchir</button>
+    </div>
+
+    <div class="tiles">
+      <div class="tile a"><div class="ic">🎬</div><div class="val" id="tAnalyses">—</div><div class="lab">Pubs analysées</div></div>
+      <div class="tile b"><div class="ic">🔥</div><div class="val" id="tClicks">—</div><div class="lab">Clics « S'abonner »</div></div>
+      <div class="tile c"><div class="ic">📈</div><div class="val" id="tRate">—</div><div class="lab">Taux d'intérêt</div></div>
+    </div>
+
+    <div class="decis">
+      <h3>🚦 Signal de décision</h3>
+      <p>Objectif : <b>10 signaux d'intention</b> (clics « S'abonner ») pour valider qu'il y a un marché.</p>
+      <div class="goalbar"><i id="goalfill" style="width:0%"></i></div>
+      <div class="goalmeta"><span id="goalnow">0 / 10</span><span>seuil GO</span></div>
+      <div class="verdict wait" id="verdict">En attente de signaux…</div>
+    </div>
+
+    <div class="links">
+      <a class="lk" href="https://formspree.io/forms" target="_blank" rel="noopener">
+        <div class="lkt">📧 Emails captés <span class="arr">↗</span></div>
+        <div class="lkd">Landing + bouton Pro — voir sur Formspree</div>
+      </a>
+      <a class="lk" href="https://scroluxe-app.onrender.com" target="_blank" rel="noopener">
+        <div class="lkt">🚀 Voir l'app <span class="arr">↗</span></div>
+        <div class="lkd">Ton produit en ligne</div>
+      </a>
+    </div>
+
+    <footer>Scroluxe · Données mises à jour en temps réel · Page privée</footer>
+  </div>
+
+</div>
+
+<script>
+  var $=function(id){return document.getElementById(id);};
+
+  function renderStats(d){
+    var a=d.count||0, c=d.proClicks||0;
+    $('tAnalyses').textContent=a.toLocaleString('fr-FR');
+    $('tClicks').textContent=c.toLocaleString('fr-FR');
+    $('tRate').textContent=(a>0 ? Math.round(c/a*100) : 0)+'%';
+    var pct=Math.min(100, c/10*100);
+    $('goalfill').style.width=pct+'%';
+    $('goalnow').textContent=c+' / 10';
+    var v=$('verdict');
+    if(c>=10){ v.className='verdict go'; v.textContent='🟢 GO — assez de signaux, tu peux construire le paiement !'; }
+    else if(c>0){ v.className='verdict wait'; v.textContent='🟠 Ça démarre — continue à envoyer du trafic.'; }
+    else { v.className='verdict wait'; v.textContent='En attente de signaux…'; }
+    var now=new Date();
+    $('updated').textContent='Mis à jour le '+now.toLocaleDateString('fr-FR')+' à '+now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  }
+  function load(){
+    fetch('/api/stats').then(function(r){return r.json();}).then(renderStats).catch(function(){ $('updated').textContent='Impossible de charger les données.'; });
+  }
+
+  function openDash(){ $('lock').hidden=true; $('dash').hidden=false; load(); }
+
+  // Déjà authentifié dans cette session ?
+  try{ if(sessionStorage.getItem('board_ok')==='1'){ openDash(); } }catch(_){}
+
+  $('lockform').addEventListener('submit', function(e){
+    e.preventDefault();
+    var code=$('code').value.trim();
+    $('lockerr').hidden=true;
+    fetch('/api/board-auth?code='+encodeURIComponent(code)).then(function(r){return r.json();}).then(function(d){
+      if(d && d.ok){ try{ sessionStorage.setItem('board_ok','1'); }catch(_){} openDash(); }
+      else { $('lockerr').hidden=false; $('code').value=''; $('code').focus(); }
+    }).catch(function(){ $('lockerr').hidden=false; });
+  });
+
+  $('refresh').addEventListener('click', load);
+</script>
+</body>
+</html>
