@@ -180,6 +180,9 @@
 
   footer{text-align:center;padding:30px 0 44px;color:var(--muted);font-size:12.5px}
   footer .logo{font-size:18px;margin-bottom:6px}
+  footer .stat{font-weight:700;color:var(--rose-deep);font-size:14.5px;margin-bottom:10px}
+  footer .stat b{color:var(--ink);font-variant-numeric:tabular-nums}
+  footer .stat[hidden]{display:none}
   .again{margin-top:24px}
   .sechead{text-align:center;margin-bottom:6px}
   .sechead h2{font-family:"Bodoni Moda",serif;font-weight:500;font-size:24px;margin:0 0 4px}
@@ -305,6 +308,7 @@
 
   <footer>
     <div class="logo">Scro<b>luxe</b></div>
+    <div class="stat" id="statLine" hidden>🎬 <b id="statCount">0</b> pubs déjà analysées</div>
     Le pré-test créa des marques beauté · On ne promet pas de ventes — on dit si ta pub accroche.
   </footer>
 </div>
@@ -427,6 +431,14 @@
     lastFile=null; if(curUrl){ URL.revokeObjectURL(curUrl); curUrl=null; } $('pvid').removeAttribute('src'); $('preview').classList.remove('show');
     form.style.display='block'; teaser.style.display='block';
   });
+
+  // Compteur d'usage (nombre de pubs analysées) — affiché seulement s'il est > 0
+  fetch('/api/stats').then(function(r){ return r.json(); }).then(function(d){
+    if(d && typeof d.count==='number' && d.count>0){
+      $('statCount').textContent=d.count.toLocaleString('fr-FR');
+      $('statLine').hidden=false;
+    }
+  }).catch(function(){});
 </script>
 </body>
 </html>

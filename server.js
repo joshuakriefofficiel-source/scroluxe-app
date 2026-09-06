@@ -127,6 +127,8 @@ app.post("/api/analyze", upload.single("video"), async (req, res) => {
     } catch (_) {
       return res.status(502).json({ error: "L'analyse n'a pas abouti. Réessaie dans un instant.", retryable: true });
     }
+    // Compteur d'usage (persistant, gratuit) — incrémenté sans bloquer la réponse.
+    fetch("https://abacus.jasoncameron.dev/hit/scroluxe_app/analyses").catch(() => {});
     return res.json(data);
   } catch (err) {
     cleanup();
@@ -141,5 +143,16 @@ app.post("/api/analyze", upload.single("video"), async (req, res) => {
 });
 
 app.get("/health", (_, res) => res.json({ ok: true, hasKey: !!API_KEY }));
+
+// Nombre total de pubs analysées (compteur persistant).
+app.get("/api/stats", async (_, res) => {
+  try {
+    const r = await fetch("https://abacus.jasoncameron.dev/get/scroluxe_app/analyses");
+    const j = await r.json();
+    res.json({ count: j && typeof j.value === "number" ? j.value : 0 });
+  } catch (_) {
+    res.json({ count: 0 });
+  }
+});
 
 app.listen(PORT, () => console.log(`Scroluxe app en écoute sur le port ${PORT}`));
