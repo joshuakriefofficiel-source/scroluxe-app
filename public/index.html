@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scroluxe — Note ta pub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;0,6..96,900;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#f5ebe6;--surface:#faf4f0;--ink:#2a1a20;--ink-soft:#5f4650;--muted:#8a7079;
+    --line:#e0d0c8;--rose:#d64d6e;--rose-deep:#b6304f;--rose-soft:#f5dbe0;--champ:#a9823f;
+    --green:#3f7d5e;--green-soft:#d9e8df;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --bg:#181017;--surface:#22161e;--ink:#f3e5e0;--ink-soft:#d3bcc4;--muted:#9c8189;
+    --line:#3a2831;--rose:#f0708c;--rose-deep:#f0708c;--rose-soft:#3d2029;--champ:#d6ac68;
+    --green:#6fb98f;--green-soft:#1c2d24;
+  }}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hanken Grotesk",system-ui,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:720px;margin:0 auto;padding:44px 24px 80px}
+  .logo{font-family:"Bodoni Moda",serif;font-weight:700;font-size:26px}
+  .logo b{color:var(--rose-deep)}
+  h1{font-family:"Bodoni Moda",serif;font-weight:500;font-size:clamp(30px,5vw,44px);line-height:1.05;
+    margin:20px 0 10px;letter-spacing:-.01em}
+  h1 em{font-style:italic;color:var(--rose-deep)}
+  .sub{color:var(--ink-soft);font-size:18px;margin:0 0 30px;max-width:52ch}
+  .drop{border:2px dashed var(--line);border-radius:16px;background:var(--surface);padding:34px;text-align:center;
+    cursor:pointer;transition:border-color .2s}
+  .drop:hover,.drop.over{border-color:var(--rose)}
+  .drop p{margin:8px 0 0;color:var(--muted);font-size:14.5px}
+  .drop .big{font-family:"Bodoni Moda",serif;font-size:20px;color:var(--ink)}
+  input[type=file]{display:none}
+  .fname{margin-top:14px;font-weight:600;color:var(--rose-deep);font-size:15px;word-break:break-all}
+  .btn{margin-top:20px;width:100%;background:var(--rose-deep);color:#fff;border:none;border-radius:100px;
+    font-family:inherit;font-weight:600;font-size:17px;padding:16px;cursor:pointer;transition:transform .15s,opacity .2s}
+  .btn:hover:not(:disabled){transform:translateY(-2px)}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .note{margin-top:14px;font-size:13px;color:var(--muted);text-align:center}
+  .loading{display:none;text-align:center;padding:30px 0}
+  .loading.show{display:block}
+  .spinner{width:38px;height:38px;border:4px solid var(--line);border-top-color:var(--rose);border-radius:50%;
+    margin:0 auto 14px;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.spinner{animation:none}}
+  .result{display:none;margin-top:28px}
+  .result.show{display:block}
+  .scorecard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px;text-align:center}
+  .score{font-family:"Bodoni Moda",serif;font-weight:900;font-size:64px;line-height:1;letter-spacing:-.02em}
+  .score small{font-size:24px;color:var(--muted);font-weight:400}
+  .verdict{display:inline-block;margin-top:10px;font-weight:600;font-size:15px;padding:6px 16px;border-radius:100px}
+  .verdict.g{background:var(--green-soft);color:var(--green)} .score.g{color:var(--green)}
+  .verdict.o{background:#f0e4cd;color:var(--champ)} .score.o{color:var(--champ)}
+  .verdict.r{background:var(--rose-soft);color:var(--rose-deep)} .score.r{color:var(--rose-deep)}
+  .hookline{margin-top:16px;font-style:italic;color:var(--ink-soft);font-size:16px}
+  .block{margin-top:20px}
+  .block h3{font-family:"Hanken Grotesk",sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    margin:0 0 10px;font-weight:700}
+  .block.a h3{color:var(--green)} .block.d h3{color:var(--rose-deep)} .block.r h3{color:var(--champ)}
+  .block ul{list-style:none;padding:0;margin:0;display:grid;gap:9px}
+  .block li{padding-left:24px;position:relative;font-size:15.5px;color:var(--ink-soft)}
+  .block.a li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
+  .block.d li::before{content:"✕";position:absolute;left:0;color:var(--rose-deep);font-weight:700}
+  .block.r li::before{content:"→";position:absolute;left:0;color:var(--champ);font-weight:700}
+  .err{display:none;margin-top:20px;background:var(--rose-soft);color:var(--rose-deep);padding:16px 20px;
+    border-radius:12px;font-size:15px}
+  .err.show{display:block}
+  .again{margin-top:20px;background:transparent;border:1.5px solid var(--rose-deep);color:var(--rose-deep)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">Scro<b>luxe</b></div>
+  <h1>Uploade ta pub. <em>Sache si elle accroche.</em></h1>
+  <p class="sub">L'IA regarde ta vidéo — hook, rythme, angle, démarcation — et te donne un score sur 100 avec ce qu'il faut corriger. Spécialisé beauté.</p>
+
+  <form id="form">
+    <label class="drop" id="drop">
+      <span class="big">📎 Choisis ou glisse ta vidéo ici</span>
+      <p>MP4, MOV… jusqu'à 100 Mo · idéalement moins de 3 min</p>
+      <input type="file" id="file" accept="video/*" required>
+      <div class="fname" id="fname"></div>
+    </label>
+    <button class="btn" id="submit" type="submit" disabled>Noter ma pub</button>
+    <p class="note">L'analyse prend ~20 à 60 secondes selon la longueur.</p>
+  </form>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Scroluxe regarde ta pub…</p>
+  </div>
+
+  <div class="err" id="err"></div>
+
+  <div class="result" id="result">
+    <div class="scorecard">
+      <div class="score" id="score">—</div>
+      <div class="verdict" id="verdict">—</div>
+      <div class="hookline" id="hook"></div>
+    </div>
+    <div class="block a"><h3>✅ Atouts</h3><ul id="atouts"></ul></div>
+    <div class="block d"><h3>🔴 Défauts</h3><ul id="defauts"></ul></div>
+    <div class="block r"><h3>🛠️ Corrections</h3><ul id="recos"></ul></div>
+    <button class="btn again" id="again" type="button">Noter une autre pub</button>
+  </div>
+</div>
+
+<script>
+  var fileInput=document.getElementById('file'), drop=document.getElementById('drop'),
+      fname=document.getElementById('fname'), submit=document.getElementById('submit'),
+      form=document.getElementById('form'), loading=document.getElementById('loading'),
+      result=document.getElementById('result'), err=document.getElementById('err');
+
+  function setFile(f){ if(f){ fname.textContent='🎬 '+f.name; submit.disabled=false; } }
+  fileInput.addEventListener('change', function(){ setFile(fileInput.files[0]); });
+  ['dragover','dragenter'].forEach(function(e){ drop.addEventListener(e,function(ev){ev.preventDefault();drop.classList.add('over');}); });
+  ['dragleave','drop'].forEach(function(e){ drop.addEventListener(e,function(ev){ev.preventDefault();drop.classList.remove('over');}); });
+  drop.addEventListener('drop', function(ev){ var f=ev.dataTransfer.files[0]; if(f){ fileInput.files=ev.dataTransfer.files; setFile(f); } });
+
+  function fill(id, arr){ var ul=document.getElementById(id); ul.innerHTML=''; (arr||[]).forEach(function(t){ var li=document.createElement('li'); li.textContent=t; ul.appendChild(li); }); }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!fileInput.files[0]) return;
+    err.classList.remove('show'); result.classList.remove('show'); form.style.display='none'; loading.classList.add('show');
+    var fd=new FormData(); fd.append('video', fileInput.files[0]);
+    fetch('/api/analyze',{method:'POST',body:fd})
+      .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
+      .then(function(res){
+        loading.classList.remove('show');
+        if(!res.ok){ err.textContent='⚠️ '+(res.d.error||'Erreur inconnue'); err.classList.add('show'); form.style.display='block'; return; }
+        var d=res.d, s=d.score||0;
+        var cls = s>=70?'g':(s>=45?'o':'r');
+        var sc=document.getElementById('score'); sc.className='score '+cls; sc.innerHTML=s+'<small>/100</small>';
+        var vd=document.getElementById('verdict'); vd.className='verdict '+cls; vd.textContent=d.verdict||'';
+        document.getElementById('hook').textContent=d.hook?('« '+d.hook+' »'):'';
+        fill('atouts',d.atouts); fill('defauts',d.defauts); fill('recos',d.recos);
+        result.classList.add('show');
+      })
+      .catch(function(){ loading.classList.remove('show'); err.textContent='⚠️ Problème réseau, réessaie.'; err.classList.add('show'); form.style.display='block'; });
+  });
+
+  document.getElementById('again').addEventListener('click', function(){
+    result.classList.remove('show'); form.style.display='block'; form.reset(); fname.textContent=''; submit.disabled=true;
+  });
+</script>
+</body>
+</html>
