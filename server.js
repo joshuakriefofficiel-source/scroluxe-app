@@ -85,7 +85,7 @@ app.post("/api/analyze", upload.single("video"), async (req, res) => {
     }
 
     // 3) Demander l'analyse
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
     const result = await model.generateContent([
       { fileData: { fileUri: file.uri, mimeType: file.mimeType } },
       { text: PROMPT },
