@@ -21,7 +21,12 @@ const upload = multer({
   limits: { fileSize: 100 * 1024 * 1024 }, // 100 Mo max
 });
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public"), {
+  setHeaders: function (res, filePath) {
+    // Le HTML n'est jamais mis en cache -> les visiteurs voient toujours la dernière version.
+    if (filePath.endsWith(".html")) res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  },
+}));
 
 // Le "cerveau" : les consignes données à Gemini pour noter une pub beauté.
 const PROMPT = `Tu es Scroluxe, un expert du pré-test de créas publicitaires pour marques de beauté (skincare).
