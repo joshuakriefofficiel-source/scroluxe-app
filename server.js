@@ -86,10 +86,26 @@ app.post("/api/analyze", upload.single("video"), async (req, res) => {
 
     // 3) Demander l'analyse
     const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
-    const result = await model.generateContent([
+    const parts = [
       { fileData: { fileUri: file.uri, mimeType: file.mimeType } },
       { text: PROMPT },
-    ]);
+    ];
+    // Ré-essai automatique si Gemini est temporairement surchargé (503) ou limité (429).
+    let result;
+    for (let attempt = 0; attempt < 4; attempt++) {
+      try {
+        result = await model.generateContent(parts);
+        break;
+      } catch (e) {
+        const msg = String(e?.message || "");
+        const retryable = /\b(503|429)\b|overload|high demand|unavailable|rate|quota/i.test(msg);
+        if (attempt < 3 && retryable) {
+          await sleep(5000 * (attempt + 1));
+          continue;
+        }
+        throw e;
+      }
+    }
 
     cleanup();
 
