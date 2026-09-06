@@ -144,14 +144,30 @@ app.post("/api/analyze", upload.single("video"), async (req, res) => {
 
 app.get("/health", (_, res) => res.json({ ok: true, hasKey: !!API_KEY }));
 
-// Nombre total de pubs analysées (compteur persistant).
+// Compteurs persistants : pubs analysées + clics "S'abonner" (intérêt Pro).
 app.get("/api/stats", async (_, res) => {
   try {
-    const r = await fetch("https://abacus.jasoncameron.dev/get/scroluxe_app/analyses");
-    const j = await r.json();
-    res.json({ count: j && typeof j.value === "number" ? j.value : 0 });
+    const [a, b] = await Promise.all([
+      fetch("https://abacus.jasoncameron.dev/get/scroluxe_app/analyses").then((r) => r.json()).catch(() => ({})),
+      fetch("https://abacus.jasoncameron.dev/get/scroluxe_app/pro_clicks").then((r) => r.json()).catch(() => ({})),
+    ]);
+    res.json({
+      count: a && typeof a.value === "number" ? a.value : 0,
+      proClicks: b && typeof b.value === "number" ? b.value : 0,
+    });
   } catch (_) {
-    res.json({ count: 0 });
+    res.json({ count: 0, proClicks: 0 });
+  }
+});
+
+// Un clic sur "S'abonner" = un signal d'intérêt Pro (compteur persistant).
+app.get("/api/interest", async (_, res) => {
+  try {
+    const r = await fetch("https://abacus.jasoncameron.dev/hit/scroluxe_app/pro_clicks");
+    const j = await r.json();
+    res.json({ ok: true, count: j && typeof j.value === "number" ? j.value : 0 });
+  } catch (_) {
+    res.json({ ok: false });
   }
 });
 

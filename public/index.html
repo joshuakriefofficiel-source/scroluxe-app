@@ -155,6 +155,23 @@
   .hookcard button:hover{opacity:.88}
   .hookcard button.done{background:var(--green)}
 
+  .procta{margin-top:24px;border-radius:20px;padding:28px;text-align:center;
+    background:linear-gradient(135deg,color-mix(in srgb,var(--rose-soft) 70%,var(--surface)),var(--surface));
+    border:1.5px solid var(--rose)}
+  .procta .proeye{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--rose-deep)}
+  .procta .proh{font-family:"Bodoni Moda",serif;font-weight:700;font-size:23px;margin:8px 0 8px;line-height:1.15}
+  .procta .prop{font-size:15.5px;color:var(--ink-soft);max-width:46ch;margin:0 auto 18px}
+  .procta .prop b{color:var(--ink)}
+  #proBtn{max-width:320px;margin-left:auto;margin-right:auto}
+  .proform{margin-top:2px}
+  .prorow{display:flex;gap:10px;max-width:440px;margin:0 auto;flex-wrap:wrap}
+  .prorow input[type=email]{flex:1;min-width:180px;font-family:inherit;font-size:15px;padding:13px 16px;border:1.5px solid var(--line);border-radius:100px;background:var(--surface);color:var(--ink)}
+  .prorow input[type=email]:focus-visible{outline:none;border-color:var(--rose)}
+  .prorow .btn{width:auto;flex:none;margin-top:0;padding:13px 22px}
+  .promicro{font-size:12.5px;color:var(--muted);margin:12px 0 0}
+  .prook{font-weight:600;color:var(--green);font-size:15.5px}
+  [hidden]{display:none!important}
+
   .divider{height:1px;background:var(--line);margin:26px 0}
 
   /* example preview */
@@ -282,6 +299,23 @@
         <div class="hookcards" id="hooks"></div>
       </div>
 
+      <div class="procta">
+        <div class="proeye">Passe au niveau supérieur</div>
+        <h4 class="proh">Analyses illimitées &amp; suivi de fatigue</h4>
+        <p class="prop">Note toutes tes pubs, suis leur usure dans le temps, et garde une longueur d'avance sur tes concurrentes. <b>Scroluxe Pro — 39€/mois.</b></p>
+        <button class="btn" id="proBtn" type="button">S'abonner au Pro</button>
+        <form class="proform" id="proform" hidden>
+          <div class="prorow">
+            <input type="email" name="email" id="proemail" placeholder="ton@email.com" aria-label="Adresse email" autocomplete="email" required>
+            <input type="hidden" name="_subject" value="Interet Pro (bouton app Scroluxe)">
+            <input type="hidden" name="source" value="App - bouton S'abonner au Pro">
+            <button class="btn" type="submit">Rejoindre la liste</button>
+          </div>
+          <p class="promicro">Le Pro ouvre bientôt — laisse ton email, on te prévient en premier.</p>
+        </form>
+        <div class="prook" id="prook" hidden>✓ Parfait, tu es sur la liste ! On te prévient dès l'ouverture du Pro 🎉</div>
+      </div>
+
       <button class="btn again" id="again" type="button">Noter une autre pub</button>
     </div>
   </section>
@@ -318,6 +352,7 @@
   var fileInput=$('file'),drop=$('drop'),fname=$('fname'),submit=$('submit'),form=$('form'),
       loading=$('loading'),loadmsg=$('loadmsg'),result=$('result'),warn=$('warn'),err=$('err'),
       teaser=$('teaser'),lastFile=null,progTimer=null,ctrl=null,startTime=0,EST=75;
+  var FORMSPREE_PRO="https://formspree.io/f/mjyvelon";
 
   var LOAD_MSGS=["Scroluxe regarde ta pub…","Analyse du hook (0-3s)…","Mesure du rythme et du montage…",
     "Détection de l'angle…","Comparaison aux codes gagnants…","Rédaction des recommandations…"];
@@ -429,7 +464,22 @@
   $('again').addEventListener('click',function(){
     hideAll(); form.reset(); fname.classList.remove('show'); fname.textContent=''; submit.disabled=true;
     lastFile=null; if(curUrl){ URL.revokeObjectURL(curUrl); curUrl=null; } $('pvid').removeAttribute('src'); $('preview').classList.remove('show');
+    $('proBtn').hidden=false; $('proform').hidden=true; $('prook').hidden=true; $('proform').reset();
     form.style.display='block'; teaser.style.display='block';
+  });
+
+  // Bouton "S'abonner au Pro" (fausse porte) : compte le clic + capture l'email
+  $('proBtn').addEventListener('click', function(){
+    fetch('/api/interest').catch(function(){});   // compte l'intention, sans bloquer
+    $('proBtn').hidden=true; $('proform').hidden=false; $('proemail').focus();
+  });
+  $('proform').addEventListener('submit', function(e){
+    e.preventDefault();
+    var em=$('proemail'); if(!em.value || !em.validity.valid){ em.focus(); return; }
+    var b=$('proform').querySelector('button[type=submit]'); if(b){ b.disabled=true; b.textContent='…'; }
+    fetch(FORMSPREE_PRO,{method:'POST',headers:{'Accept':'application/json'},body:new FormData($('proform'))})
+      .then(function(){ $('proform').hidden=true; $('prook').hidden=false; })
+      .catch(function(){ $('proform').hidden=true; $('prook').hidden=false; });
   });
 
   // Compteur d'usage (nombre de pubs analysées) — affiché seulement s'il est > 0
