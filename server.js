@@ -29,13 +29,16 @@ Analyse cette vidéo de publicité comme un stratège créa. Sois précis, honn�
 
 Règle d'or : tu ne promets JAMAIS de ventes. Tu juges si la pub va ACCROCHER (arrêter le scroll) et se DÉMARQUER.
 
-Évalue notamment :
-- Le HOOK (les 3 premières secondes) : est-ce que ça arrête le pouce ? image + phrase d'accroche.
-- Le RYTHME / montage : nombre de coupures, dynamisme, longueurs.
-- L'ANGLE : avant/après, témoignage, ingrédient, UGC, prix, autorité…
-- Le TEXTE à l'écran / sous-titres : lisibilité, promesse claire, sound-off.
-- Le PRODUIT : à quel moment il apparaît, est-ce clair.
-- La DÉMARCATION : est-ce que ça ressemble à toutes les autres pubs beauté ou pas.
+Évalue : le HOOK (3 premières secondes), le RYTHME/montage, l'ANGLE, le TEXTE à l'écran/sous-titres, le moment d'apparition du PRODUIT, la DÉMARCATION vs les autres pubs beauté.
+
+>>> EXIGENCE CAPITALE SUR LES RECOMMANDATIONS <<<
+Chaque reco doit être une INSTRUCTION EXÉCUTABLE que le client peut appliquer sans réfléchir. INTERDIT les conseils vagues du type "renforce le CTA" ou "améliore le hook".
+Chaque reco DOIT contenir les 3 éléments :
+1. QUOI faire précisément,
+2. OÙ / QUAND dans la vidéo (le moment exact, ex: "dans la 1ʳᵉ seconde", "à 0:08", "sur le plan final"),
+3. un EXEMPLE CONCRET (le texte exact à écrire/dire, ou le visuel précis à filmer).
+Mauvais exemple (INTERDIT) : "Ajoute une preuve sociale."
+Bon exemple (ATTENDU) : "À 0:05, ajoute une incrustation texte blanche sur fond rose : « Approuvé par 12 000 clientes ★★★★★ » pendant 2 secondes."
 
 Réponds UNIQUEMENT avec un objet JSON valide (aucun texte autour), de cette forme exacte :
 {
@@ -44,7 +47,8 @@ Réponds UNIQUEMENT avec un objet JSON valide (aucun texte autour), de cette for
   "hook": "<1 phrase sur la force ou faiblesse des 3 premières secondes>",
   "atouts": ["<atout 1>", "<atout 2>", "<atout 3>"],
   "defauts": ["<défaut 1>", "<défaut 2>", "<défaut 3>"],
-  "recos": ["<reco concrète 1>", "<reco concrète 2>", "<reco concrète 3>"],
+  "recos": ["<instruction exécutable avec QUOI + OÙ/QUAND + EXEMPLE concret>", "<idem 2>", "<idem 3>", "<idem 4>"],
+  "hooks_reecrits": ["<accroche prête à l'emploi, texte exact pour la 1ʳᵉ seconde>", "<accroche alternative 2>", "<accroche alternative 3>"],
   "angle": "<l'angle principal détecté>"
 }`;
 

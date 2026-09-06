@@ -67,6 +67,9 @@
   .block.a li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
   .block.d li::before{content:"✕";position:absolute;left:0;color:var(--rose-deep);font-weight:700}
   .block.r li::before{content:"→";position:absolute;left:0;color:var(--champ);font-weight:700}
+  .block.h h3{color:var(--rose-deep)}
+  .block.h li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px 12px 34px;font-style:italic;color:var(--ink)}
+  .block.h li::before{content:"🎬";position:absolute;left:12px;font-style:normal}
   .err{display:none;margin-top:20px;background:var(--rose-soft);color:var(--rose-deep);padding:16px 20px;
     border-radius:12px;font-size:15px}
   .err.show{display:block}
@@ -105,7 +108,8 @@
     </div>
     <div class="block a"><h3>✅ Atouts</h3><ul id="atouts"></ul></div>
     <div class="block d"><h3>🔴 Défauts</h3><ul id="defauts"></ul></div>
-    <div class="block r"><h3>🛠️ Corrections</h3><ul id="recos"></ul></div>
+    <div class="block r"><h3>🛠️ Corrections précises</h3><ul id="recos"></ul></div>
+    <div class="block h"><h3>🎬 Accroches prêtes à l'emploi</h3><ul id="hooks"></ul></div>
     <button class="btn again" id="again" type="button">Noter une autre pub</button>
   </div>
 </div>
@@ -139,7 +143,7 @@
         var sc=document.getElementById('score'); sc.className='score '+cls; sc.innerHTML=s+'<small>/100</small>';
         var vd=document.getElementById('verdict'); vd.className='verdict '+cls; vd.textContent=d.verdict||'';
         document.getElementById('hook').textContent=d.hook?('« '+d.hook+' »'):'';
-        fill('atouts',d.atouts); fill('defauts',d.defauts); fill('recos',d.recos);
+        fill('atouts',d.atouts); fill('defauts',d.defauts); fill('recos',d.recos); fill('hooks',d.hooks_reecrits);
         result.classList.add('show');
       })
       .catch(function(){ loading.classList.remove('show'); err.textContent='⚠️ Problème réseau, réessaie.'; err.classList.add('show'); form.style.display='block'; });
