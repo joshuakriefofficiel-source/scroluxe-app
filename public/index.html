@@ -74,6 +74,10 @@
   .btn:disabled{opacity:.5;cursor:not-allowed}
   .btn:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
   .fineprint{text-align:center;font-size:12.5px;color:var(--muted);margin-top:12px}
+  .preview{display:none;margin-top:16px}
+  .preview.show{display:block}
+  .preview video{width:100%;max-height:340px;border-radius:14px;background:#000;border:1px solid var(--line);display:block}
+  .preview .cap{font-size:12.5px;color:var(--green);text-align:center;margin-top:8px;font-weight:600}
 
   /* loading */
   .loading{display:none;text-align:center;padding:20px 0 6px}
@@ -198,6 +202,10 @@
         <input type="file" id="file" accept="video/*" required>
         <div class="fname" id="fname"></div>
       </label>
+      <div class="preview" id="preview">
+        <video id="pvid" controls muted playsinline preload="metadata"></video>
+        <div class="cap">✓ Aperçu — vérifie que c'est bien la bonne vidéo</div>
+      </div>
       <button class="btn" id="submit" type="submit" disabled>Noter ma pub</button>
       <p class="fineprint">Analyse en ~30 à 90 s · gratuit</p>
     </form>
@@ -284,7 +292,17 @@
   var LOAD_MSGS=["Scroluxe regarde ta pub…","Analyse du hook (0-3s)…","Mesure du rythme et du montage…",
     "Détection de l'angle…","Comparaison aux codes gagnants…","Rédaction des recommandations…"];
 
-  function setFile(f){ if(f){ lastFile=f; fname.textContent='🎬 '+f.name; fname.classList.add('show'); submit.disabled=false; } }
+  var curUrl=null;
+  function setFile(f){
+    if(!f) return;
+    lastFile=f; fname.textContent='🎬 '+f.name; fname.classList.add('show'); submit.disabled=false;
+    try{
+      if(curUrl){ URL.revokeObjectURL(curUrl); }
+      curUrl=URL.createObjectURL(f);
+      var pv=$('pvid'); pv.src=curUrl; pv.load();
+      $('preview').classList.add('show');
+    }catch(_){}
+  }
   fileInput.addEventListener('change',function(){ setFile(fileInput.files[0]); });
   ['dragover','dragenter'].forEach(function(e){ drop.addEventListener(e,function(ev){ev.preventDefault();drop.classList.add('over');}); });
   ['dragleave','drop'].forEach(function(e){ drop.addEventListener(e,function(ev){ev.preventDefault();drop.classList.remove('over');}); });
@@ -365,7 +383,8 @@
   $('retryErr').addEventListener('click',analyze);
   $('again').addEventListener('click',function(){
     hideAll(); form.reset(); fname.classList.remove('show'); fname.textContent=''; submit.disabled=true;
-    lastFile=null; form.style.display='block'; teaser.style.display='block';
+    lastFile=null; if(curUrl){ URL.revokeObjectURL(curUrl); curUrl=null; } $('pvid').removeAttribute('src'); $('preview').classList.remove('show');
+    form.style.display='block'; teaser.style.display='block';
   });
 </script>
 </body>
