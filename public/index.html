@@ -162,7 +162,7 @@
   .procta .proh{font-family:"Bodoni Moda",serif;font-weight:700;font-size:23px;margin:8px 0 8px;line-height:1.15}
   .procta .prop{font-size:15.5px;color:var(--ink-soft);max-width:46ch;margin:0 auto 18px}
   .procta .prop b{color:var(--ink)}
-  #proBtn{max-width:320px;margin-left:auto;margin-right:auto}
+  .procta > .btn{max-width:320px;margin-left:auto;margin-right:auto;display:block}
   .proform{margin-top:2px}
   .prorow{display:flex;gap:10px;max-width:440px;margin:0 auto;flex-wrap:wrap}
   .prorow input[type=email]{flex:1;min-width:180px;font-family:inherit;font-size:15px;padding:13px 16px;border:1.5px solid var(--line);border-radius:100px;background:var(--surface);color:var(--ink)}
@@ -338,6 +338,23 @@
       <div class="step"><div class="n">II.</div><b>L'IA regarde</b><small>Elle analyse hook, rythme, angle, démarcation.</small></div>
       <div class="step"><div class="n">III.</div><b>Tu corriges</b><small>Score + recos exactes + accroches prêtes.</small></div>
     </div>
+
+    <div class="procta" style="margin-top:26px">
+      <div class="proeye">Bientôt disponible</div>
+      <h4 class="proh">Passe au Pro pour tout débloquer</h4>
+      <p class="prop">Analyses illimitées, suivi de fatigue, multi-produits. <b>Scroluxe Pro — 39€/mois.</b></p>
+      <button class="btn" id="proBtn2" type="button">S'abonner au Pro</button>
+      <form class="proform" id="proform2" hidden>
+        <div class="prorow">
+          <input type="email" name="email" id="proemail2" placeholder="ton@email.com" aria-label="Adresse email" autocomplete="email" required>
+          <input type="hidden" name="_subject" value="Interet Pro (accueil app Scroluxe)">
+          <input type="hidden" name="source" value="App accueil - bouton S'abonner au Pro">
+          <button class="btn" type="submit">Rejoindre la liste</button>
+        </div>
+        <p class="promicro">Le Pro ouvre bientôt — laisse ton email, on te prévient en premier.</p>
+      </form>
+      <div class="prook" id="prook2" hidden>✓ Parfait, tu es sur la liste ! On te prévient dès l'ouverture du Pro 🎉</div>
+    </div>
   </section>
 
   <footer>
@@ -468,19 +485,26 @@
     form.style.display='block'; teaser.style.display='block';
   });
 
-  // Bouton "S'abonner au Pro" (fausse porte) : compte le clic + capture l'email
-  $('proBtn').addEventListener('click', function(){
-    fetch('/api/interest').catch(function(){});   // compte l'intention, sans bloquer
-    $('proBtn').hidden=true; $('proform').hidden=false; $('proemail').focus();
-  });
-  $('proform').addEventListener('submit', function(e){
-    e.preventDefault();
-    var em=$('proemail'); if(!em.value || !em.validity.valid){ em.focus(); return; }
-    var b=$('proform').querySelector('button[type=submit]'); if(b){ b.disabled=true; b.textContent='…'; }
-    fetch(FORMSPREE_PRO,{method:'POST',headers:{'Accept':'application/json'},body:new FormData($('proform'))})
-      .then(function(){ $('proform').hidden=true; $('prook').hidden=false; })
-      .catch(function(){ $('proform').hidden=true; $('prook').hidden=false; });
-  });
+  // Bouton "S'abonner au Pro" (fausse porte) : compte le clic + capture l'email.
+  // Réutilisable : un dans le résultat, un sur la page d'accueil.
+  function wirePro(btnId, formId, emailId, okId){
+    var btn=$(btnId), form=$(formId);
+    if(!btn || !form) return;
+    btn.addEventListener('click', function(){
+      fetch('/api/interest').catch(function(){});   // compte l'intention, sans bloquer
+      btn.hidden=true; form.hidden=false; $(emailId).focus();
+    });
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var em=$(emailId); if(!em.value || !em.validity.valid){ em.focus(); return; }
+      var b=form.querySelector('button[type=submit]'); if(b){ b.disabled=true; b.textContent='…'; }
+      fetch(FORMSPREE_PRO,{method:'POST',headers:{'Accept':'application/json'},body:new FormData(form)})
+        .then(function(){ form.hidden=true; $(okId).hidden=false; })
+        .catch(function(){ form.hidden=true; $(okId).hidden=false; });
+    });
+  }
+  wirePro('proBtn','proform','proemail','prook');      // dans le résultat
+  wirePro('proBtn2','proform2','proemail2','prook2');  // sur la page d'accueil
 
   // Compteur d'usage (nombre de pubs analysées) — affiché seulement s'il est > 0
   fetch('/api/stats').then(function(r){ return r.json(); }).then(function(d){
