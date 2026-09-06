@@ -229,12 +229,12 @@
       <p id="loadmsg">Scroluxe regarde ta pub…</p>
       <div class="pmeta"><span class="pct" id="ppct">0 % terminé</span><span id="peta">estimation…</span></div>
       <div class="pbar"><i id="pfill"></i></div>
-      <small>La 1ʳᵉ analyse peut être plus longue (réveil du serveur). Reste sur la page.</small>
+      <small>La première analyse peut prendre quelques secondes de plus. Reste sur la page.</small>
     </div>
 
     <div class="notice warn" id="warn">
-      <div class="ttl">🕐 L'IA est très demandée là</div>
-      <p>Gemini est momentanément surchargé. C'est temporaire — réessaie dans quelques secondes.</p>
+      <div class="ttl">🕐 Beaucoup de monde en ce moment</div>
+      <p>Ton analyse n'a pas pu aboutir à cause d'un pic d'affluence. Réessaie dans quelques secondes, ça passe vite.</p>
       <button class="btn" id="retryWarn" type="button">Réessayer</button>
     </div>
 
@@ -382,9 +382,8 @@
         clearTimeout(to);
         if(!res.ok){
           stopLoading();
-          var m=(res.d&&res.d.error)||'';
-          if(/503|429|overload|high demand|surcharg|demand/i.test(m)){ warn.classList.add('show'); }
-          else { $('errmsg').textContent=m||"Erreur inconnue. Réessaie."; err.classList.add('show'); }
+          if(res.d && res.d.retryable){ warn.classList.add('show'); }
+          else { $('errmsg').textContent=(res.d && res.d.error) || "Ton analyse n'a pas pu aboutir. Réessaie."; err.classList.add('show'); }
           return;
         }
         finishBar();

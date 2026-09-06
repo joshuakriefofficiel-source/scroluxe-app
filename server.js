@@ -61,10 +61,10 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 app.post("/api/analyze", upload.single("video"), async (req, res) => {
   if (!API_KEY) {
-    return res.status(500).json({ error: "Clé Gemini manquante. Ajoute GEMINI_API_KEY dans les variables d'environnement." });
+    return res.status(500).json({ error: "Le service est momentanément indisponible. Réessaie plus tard.", retryable: true });
   }
   if (!req.file) {
-    return res.status(400).json({ error: "Aucune vidéo reçue." });
+    return res.status(400).json({ error: "Aucune vidéo reçue. Choisis une vidéo puis relance l'analyse." });
   }
 
   const localPath = req.file.path;
@@ -90,7 +90,7 @@ app.post("/api/analyze", upload.single("video"), async (req, res) => {
     }
     if (file.state !== FileState.ACTIVE) {
       cleanup();
-      return res.status(500).json({ error: "Gemini n'a pas pu traiter la vidéo (trop longue ou format non supporté)." });
+      return res.status(500).json({ error: "Cette vidéo n'a pas pu être analysée (trop longue ou format non supporté). Essaie une vidéo plus courte, au format MP4." });
     }
 
     // 3) Demander l'analyse
@@ -125,13 +125,18 @@ app.post("/api/analyze", upload.single("video"), async (req, res) => {
     try {
       data = JSON.parse(text);
     } catch (_) {
-      return res.status(502).json({ error: "Réponse illisible de l'IA.", raw: text });
+      return res.status(502).json({ error: "L'analyse n'a pas abouti. Réessaie dans un instant.", retryable: true });
     }
     return res.json(data);
   } catch (err) {
     cleanup();
-    console.error(err);
-    return res.status(500).json({ error: "Erreur pendant l'analyse : " + (err?.message || "inconnue") });
+    console.error(err); // détail technique gardé dans les logs serveur, jamais montré à l'utilisateur
+    const msg = String(err?.message || "");
+    const retryable = /\b(503|429)\b|overload|high demand|unavailable|rate|quota/i.test(msg);
+    return res.status(retryable ? 503 : 500).json({
+      error: retryable ? "Le service est très sollicité en ce moment. Réessaie dans quelques secondes." : "L'analyse n'a pas abouti. Réessaie dans un instant.",
+      retryable: retryable,
+    });
   }
 });
 
