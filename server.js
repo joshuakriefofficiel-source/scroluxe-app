@@ -109,7 +109,9 @@ app.post("/api/analyze", upload.single("video"), async (req, res) => {
     ];
     // Plusieurs modèles en secours : si le plus récent est surchargé, on bascule
     // automatiquement sur un autre, plus disponible. L'utilisateur ne voit rien.
-    const MODELS = ["gemini-3.6-flash", "gemini-flash-latest", "gemini-2.5-flash"];
+    // On attaque d'abord un modèle plus disponible (le plus récent est le plus saturé),
+    // et on garde les autres en secours si l'un est indisponible.
+    const MODELS = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-3.6-flash"];
     let result, lastErr;
     for (const modelName of MODELS) {
       const model = genAI.getGenerativeModel({ model: modelName });
