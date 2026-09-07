@@ -431,7 +431,7 @@
   var $=function(id){return document.getElementById(id);};
   var fileInput=$('file'),drop=$('drop'),fname=$('fname'),submit=$('submit'),form=$('form'),
       loading=$('loading'),loadmsg=$('loadmsg'),result=$('result'),warn=$('warn'),err=$('err'),
-      teaser=$('teaser'),lastFile=null,progTimer=null,ctrl=null,startTime=0,EST=75;
+      teaser=$('teaser'),lastFile=null,progTimer=null,ctrl=null,startTime=0,EST=85;
   var FORMSPREE_PRO="https://formspree.io/f/mjyvelon";
 
   var LOAD_MSGS=["Scroluxe regarde ta pub…","Analyse du hook (0-3s)…","Mesure du rythme et du montage…",
@@ -482,14 +482,20 @@
   }
   function hideAll(){ [form,loading,warn,err,result].forEach(function(el){el.classList.remove('show');}); form.style.display='none'; loading.classList.remove('show'); warn.classList.remove('show'); err.classList.remove('show'); result.classList.remove('show'); }
 
+  var TAIL=["Rédaction de tes recommandations…","Analyse approfondie en cours…","Derniers réglages…","Presque terminé…"];
   function pstep(){
     var el=(Date.now()-startTime)/1000;
-    var p=Math.min(95, 95*(1-Math.exp(-el/28))); // avance vite, puis ralentit, plafonne à 95%
-    $('pfill').style.width=p+'%';
+    // Monte régulièrement et continue de grimper très lentement (jamais figée), plafond 98%.
+    var p=Math.min(98, 98*(1-Math.exp(-el/42)));
+    $('pfill').style.width=p.toFixed(1)+'%';
     $('ppct').textContent=Math.round(p)+' % terminé';
     var eta=Math.max(0, EST-el);
-    $('peta').textContent = el<3 ? 'estimation…' : (eta>2 ? '~'+Math.ceil(eta)+' s restantes' : 'bientôt fini…');
-    loadmsg.textContent = p<18?LOAD_MSGS[0] : p<40?LOAD_MSGS[1] : p<60?LOAD_MSGS[2] : p<78?LOAD_MSGS[3] : p<90?LOAD_MSGS[4] : LOAD_MSGS[5];
+    $('peta').textContent = el<3 ? 'estimation…' : (eta>4 ? '~'+Math.ceil(eta)+' s restantes' : 'analyse approfondie…');
+    var m;
+    if(p<18) m=LOAD_MSGS[0]; else if(p<36) m=LOAD_MSGS[1]; else if(p<52) m=LOAD_MSGS[2];
+    else if(p<68) m=LOAD_MSGS[3]; else if(p<82) m=LOAD_MSGS[4];
+    else m=TAIL[Math.floor(el/4)%TAIL.length]; // pendant la longue fin, le message change toutes les 4s
+    loadmsg.textContent=m;
   }
   function startLoading(){
     hideAll(); teaser.style.display='none'; loading.classList.add('show');
