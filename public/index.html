@@ -185,6 +185,14 @@
   .prook{font-weight:600;color:var(--green);font-size:15.5px}
   [hidden]{display:none!important}
 
+  .prostrip{margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 22px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .pst-txt{font-size:15px;color:var(--ink-soft)}
+  .pst-txt b{color:var(--rose-deep);font-family:"Bodoni Moda",serif;font-weight:700}
+  .pst-btn{width:auto;margin-top:0;flex:none;padding:11px 20px;font-size:14.5px}
+  .prostrip .proform{width:100%;margin-top:0}
+  .prostrip .prook{width:100%;text-align:center}
+
   .divider{height:1px;background:var(--line);margin:26px 0}
 
   /* example preview */
@@ -360,21 +368,18 @@
       <div class="step"><div class="n">III.</div><b>Tu corriges</b><small>Score + recos exactes + accroches prêtes.</small></div>
     </div>
 
-    <div class="procta" style="margin-top:26px">
-      <div class="proeye">Bientôt disponible</div>
-      <h4 class="proh">Passe au Pro pour tout débloquer</h4>
-      <p class="prop">Analyses illimitées, suivi de fatigue, multi-produits. <b>Scroluxe Pro — 39€/mois.</b></p>
-      <button class="btn" id="proBtn2" type="button">S'abonner au Pro</button>
+    <div class="prostrip">
+      <div class="pst-txt">✨ <b>Scroluxe Pro</b> arrive bientôt — analyses illimitées &amp; suivi de fatigue.</div>
+      <button class="btn pst-btn" id="proBtn2" type="button">Être prévenu·e</button>
       <form class="proform" id="proform2" hidden>
         <div class="prorow">
           <input type="email" name="email" id="proemail2" placeholder="ton@email.com" aria-label="Adresse email" autocomplete="email" required>
           <input type="hidden" name="_subject" value="Interet Pro (accueil app Scroluxe)">
-          <input type="hidden" name="source" value="App accueil - bouton S'abonner au Pro">
-          <button class="btn" type="submit">Rejoindre la liste</button>
+          <input type="hidden" name="source" value="App accueil - liste d'attente Pro">
+          <button class="btn" type="submit">Rejoindre</button>
         </div>
-        <p class="promicro">Le Pro ouvre bientôt — laisse ton email, on te prévient en premier.</p>
       </form>
-      <div class="prook" id="prook2" hidden>✓ Parfait, tu es sur la liste ! On te prévient dès l'ouverture du Pro 🎉</div>
+      <div class="prook" id="prook2" hidden>✓ Parfait, on te prévient dès l'ouverture du Pro 🎉</div>
     </div>
   </section>
 
