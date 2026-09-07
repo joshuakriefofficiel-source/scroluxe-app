@@ -74,6 +74,10 @@ app.post("/api/analyze", upload.single("video"), async (req, res) => {
 
   const localPath = req.file.path;
   const cleanup = () => { try { fs.unlinkSync(localPath); } catch (_) {} };
+  const context = (req.body && req.body.context ? String(req.body.context).slice(0, 300) : "").trim();
+  const contextBlock = context
+    ? `\n\nCONTEXTE FOURNI PAR L'ANNONCEUR : « ${context} ». Prends-le en compte : juge si le hook, l'angle et la démonstration servent bien CE produit, CETTE cible et CET objectif, et adapte tes recommandations en conséquence.`
+    : "";
 
   try {
     const fileManager = new GoogleAIFileManager(API_KEY);
@@ -101,7 +105,7 @@ app.post("/api/analyze", upload.single("video"), async (req, res) => {
     // 3) Demander l'analyse
     const parts = [
       { fileData: { fileUri: file.uri, mimeType: file.mimeType } },
-      { text: PROMPT },
+      { text: PROMPT + contextBlock },
     ];
     // Plusieurs modèles en secours : si le plus récent est surchargé, on bascule
     // automatiquement sur un autre, plus disponible. L'utilisateur ne voit rien.

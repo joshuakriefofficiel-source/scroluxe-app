@@ -81,6 +81,12 @@
   .preview.show{display:block}
   .preview video{width:100%;max-height:340px;border-radius:14px;background:#000;border:1px solid var(--line);display:block}
   .preview .cap{font-size:12.5px;color:var(--green);text-align:center;margin-top:8px;font-weight:600}
+  .ctx{margin-top:16px;text-align:left}
+  .ctxlab{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:7px}
+  .ctxlab span{color:var(--muted);font-weight:400}
+  #ctx{width:100%;font-family:inherit;font-size:15px;padding:13px 16px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink)}
+  #ctx:focus-visible{outline:none;border-color:var(--rose)}
+  #ctx::placeholder{color:var(--muted)}
 
   /* loading */
   .loading{display:none;text-align:center;padding:20px 0 6px}
@@ -262,6 +268,10 @@
       <div class="preview" id="preview">
         <video id="pvid" controls muted playsinline preload="metadata"></video>
         <div class="cap">✓ Aperçu — vérifie que c'est bien la bonne vidéo</div>
+      </div>
+      <div class="ctx">
+        <label class="ctxlab" for="ctx">Contexte <span>· optionnel, pour un diagnostic sur-mesure</span></label>
+        <input type="text" id="ctx" maxlength="160" placeholder="ex : sérum anti-âge · femmes 25-40 · objectif achat">
       </div>
       <button class="btn" id="submit" type="submit" disabled>Analyser ma pub gratuitement</button>
       <p class="fineprint">Analyse en ~30 à 90 s · gratuit</p>
@@ -466,6 +476,7 @@
     if(!lastFile) return;
     startLoading();
     var fd=new FormData(); fd.append('video',lastFile);
+    var ctxVal=(($('ctx')&&$('ctx').value)||'').trim(); if(ctxVal){ fd.append('context', ctxVal); }
     ctrl=new AbortController();
     var to=setTimeout(function(){ ctrl.abort(); },200000);
     fetch('/api/analyze',{method:'POST',body:fd,signal:ctrl.signal})
