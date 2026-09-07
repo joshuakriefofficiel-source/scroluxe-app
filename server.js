@@ -45,9 +45,14 @@ Chaque reco DOIT contenir les 3 éléments :
 Mauvais exemple (INTERDIT) : "Ajoute une preuve sociale."
 Bon exemple (ATTENDU) : "À 0:05, ajoute une incrustation texte blanche sur fond rose : « Approuvé par 12 000 clientes ★★★★★ » pendant 2 secondes."
 
+NOTATION : note la créa sur 6 critères, barème FIXE (total 100) :
+- Hook (0-20) · Rythme (0-15) · Angle (0-20) · Produit (0-15) · Contraste (0-15) · Démarcation (0-15).
+Le champ "score" DOIT être exactement la somme de ces 6 sous-scores.
+
 Réponds UNIQUEMENT avec un objet JSON valide (aucun texte autour), de cette forme exacte :
 {
-  "score": <entier 0-100>,
+  "score": <entier 0-100, = somme des 6 critères>,
+  "criteres": { "hook": <0-20>, "rythme": <0-15>, "angle": <0-20>, "produit": <0-15>, "contraste": <0-15>, "demarcation": <0-15> },
   "verdict": "<'Arrête le scroll' ou 'Moyen' ou 'Se fond dans la masse'>",
   "hook": "<1 phrase sur la force ou faiblesse des 3 premières secondes>",
   "atouts": ["<atout 1>", "<atout 2>", "<atout 3>"],
