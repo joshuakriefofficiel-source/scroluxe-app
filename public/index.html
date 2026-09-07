@@ -82,11 +82,21 @@
   .preview video{width:100%;max-height:340px;border-radius:14px;background:#000;border:1px solid var(--line);display:block}
   .preview .cap{font-size:12.5px;color:var(--green);text-align:center;margin-top:8px;font-weight:600}
   .ctx{margin-top:16px;text-align:left}
-  .ctxlab{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:7px}
-  .ctxlab span{color:var(--muted);font-weight:400}
-  #ctx{width:100%;font-family:inherit;font-size:15px;padding:13px 16px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink)}
-  #ctx:focus-visible{outline:none;border-color:var(--rose)}
-  #ctx::placeholder{color:var(--muted)}
+  .ctxtoggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;
+    background:var(--surface-2);border:1.5px solid var(--line);border-radius:12px;padding:13px 16px;
+    font-family:inherit;color:var(--ink);font-size:14.5px;font-weight:700;transition:border-color .2s}
+  .ctxtoggle:hover{border-color:var(--rose)}
+  .ctxtoggle .ctxt small{color:var(--muted);font-weight:400;margin-left:8px;font-size:12.5px}
+  .ctxtoggle .chev{color:var(--rose-deep);transition:transform .25s ease;font-size:13px}
+  .ctxtoggle[aria-expanded="true"] .chev{transform:rotate(180deg)}
+  .ctxfields{margin-top:12px}
+  .ctxgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:560px){.ctxgrid{grid-template-columns:1fr}}
+  .cxf{display:flex;flex-direction:column;font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--ink-soft);gap:6px;text-transform:uppercase}
+  .cxf input,.cxf select{font-family:inherit;font-size:15px;font-weight:400;letter-spacing:0;text-transform:none;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--ink)}
+  .cxf input:focus-visible,.cxf select:focus-visible{outline:none;border-color:var(--rose)}
+  .cxf input::placeholder{color:var(--muted)}
+  .cxhint{font-size:12.5px;color:var(--muted);margin:12px 0 0}
 
   /* loading */
   .loading{display:none;text-align:center;padding:20px 0 6px}
@@ -270,8 +280,25 @@
         <div class="cap">✓ Aperçu — vérifie que c'est bien la bonne vidéo</div>
       </div>
       <div class="ctx">
-        <label class="ctxlab" for="ctx">Contexte <span>· optionnel, pour un diagnostic sur-mesure</span></label>
-        <input type="text" id="ctx" maxlength="160" placeholder="ex : sérum anti-âge · femmes 25-40 · objectif achat">
+        <button type="button" class="ctxtoggle" id="ctxToggle" aria-expanded="false">
+          <span class="ctxt">✨ Diagnostic sur-mesure <small>optionnel</small></span>
+          <span class="chev" id="ctxChev">▾</span>
+        </button>
+        <div class="ctxfields" id="ctxFields" hidden>
+          <div class="ctxgrid">
+            <label class="cxf">Produit / niche<input type="text" id="cxProduit" maxlength="80" placeholder="ex : sérum anti-âge"></label>
+            <label class="cxf">Cible<input type="text" id="cxCible" maxlength="80" placeholder="ex : femmes 25-40"></label>
+            <label class="cxf">Prix<input type="text" id="cxPrix" maxlength="40" placeholder="ex : 39€"></label>
+            <label class="cxf">Objectif<select id="cxObjectif">
+              <option value="">—</option>
+              <option>Vente</option>
+              <option>Notoriété</option>
+              <option>Trafic / clics</option>
+              <option>Collecte d'emails</option>
+            </select></label>
+          </div>
+          <p class="cxhint">Plus tu en dis, plus l'analyse est précise. Tout est optionnel.</p>
+        </div>
       </div>
       <button class="btn" id="submit" type="submit" disabled>Analyser ma pub gratuitement</button>
       <p class="fineprint">Analyse en ~30 à 90 s · gratuit</p>
@@ -476,7 +503,12 @@
     if(!lastFile) return;
     startLoading();
     var fd=new FormData(); fd.append('video',lastFile);
-    var ctxVal=(($('ctx')&&$('ctx').value)||'').trim(); if(ctxVal){ fd.append('context', ctxVal); }
+    var cx=[];
+    var _p=(($('cxProduit')&&$('cxProduit').value)||'').trim(); if(_p) cx.push('Produit: '+_p);
+    var _c=(($('cxCible')&&$('cxCible').value)||'').trim(); if(_c) cx.push('Cible: '+_c);
+    var _pr=(($('cxPrix')&&$('cxPrix').value)||'').trim(); if(_pr) cx.push('Prix: '+_pr);
+    var _o=(($('cxObjectif')&&$('cxObjectif').value)||'').trim(); if(_o) cx.push('Objectif: '+_o);
+    if(cx.length){ fd.append('context', cx.join(' · ')); }
     ctrl=new AbortController();
     var to=setTimeout(function(){ ctrl.abort(); },200000);
     fetch('/api/analyze',{method:'POST',body:fd,signal:ctrl.signal})
@@ -530,6 +562,7 @@
     hideAll(); form.reset(); fname.classList.remove('show'); fname.textContent=''; submit.disabled=true;
     lastFile=null; if(curUrl){ URL.revokeObjectURL(curUrl); curUrl=null; } $('pvid').removeAttribute('src'); $('preview').classList.remove('show');
     $('proBtn').hidden=false; $('proform').hidden=true; $('prook').hidden=true; $('proform').reset();
+    $('ctxFields').hidden=true; $('ctxToggle').setAttribute('aria-expanded','false');
     form.style.display='block'; teaser.style.display='block';
   });
 
@@ -553,6 +586,13 @@
   }
   wirePro('proBtn','proform','proemail','prook');      // dans le résultat
   wirePro('proBtn2','proform2','proemail2','prook2');  // sur la page d'accueil
+
+  // Déplier / replier le "Diagnostic sur-mesure"
+  $('ctxToggle').addEventListener('click', function(){
+    var willOpen=$('ctxFields').hidden;
+    $('ctxFields').hidden=!willOpen;
+    $('ctxToggle').setAttribute('aria-expanded', String(willOpen));
+  });
 
   // Compteur d'usage (nombre de pubs analysées) — affiché seulement s'il est > 0
   fetch('/api/stats').then(function(r){ return r.json(); }).then(function(d){
