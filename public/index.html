@@ -140,6 +140,8 @@
   .verdict.g{background:var(--green-soft);color:var(--green)} .num.g{color:var(--green)}
   .verdict.o{background:var(--champ-soft);color:var(--champ)} .num.o{color:var(--champ)}
   .verdict.r{background:var(--rose-soft);color:var(--rose-deep)} .num.r{color:var(--rose-deep)}
+  .launchnote{font-size:13px;color:var(--ink-soft);font-weight:600;margin:0 0 12px;line-height:1.4}
+  .launchnote:empty{display:none}
   .scoremeta .angle{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700}
   .angleval{font-family:"Bodoni Moda",serif;font-size:19px;color:var(--ink);margin-top:3px;line-height:1.25}
   .hookline{margin-top:22px;padding-top:20px;border-top:1px solid var(--line);
@@ -337,6 +339,7 @@
           </div>
           <div class="scoremeta">
             <span class="verdict g" id="verdict">—</span>
+            <div class="launchnote" id="launchnote"></div>
             <div class="angle">Angle détecté</div>
             <div class="angleval" id="angle">—</div>
           </div>
@@ -546,7 +549,13 @@
     arc.style.transition='stroke-dashoffset 1s cubic-bezier(.2,.7,.3,1)';
     arc.setAttribute('stroke-dashoffset',circ);
     var num=$('num'); num.className='num '+cls; num.textContent='0';
-    var vd=$('verdict'); vd.className='verdict '+cls; vd.textContent=d.verdict||'';
+    // Verdict = une ligne d'arrivée claire (feu vert à 70+), pas seulement une liste de défauts.
+    var launchVerdict = cls==='g' ? '✅ Prête à lancer' : (cls==='o' ? '🟠 Presque — quelques réglages' : '🔴 À retravailler');
+    var vd=$('verdict'); vd.className='verdict '+cls; vd.textContent=launchVerdict;
+    $('launchnote').textContent = cls==='g'
+      ? 'Au-dessus de 70, inutile de chercher la perfection : cette pub est prête, lance-la.'
+      : (cls==='o' ? 'Applique les corrections ci-dessous et vise 70 — pas plus.'
+                   : 'Retravaille les points ci-dessous, puis re-teste : objectif 70/100.');
     $('angle').textContent=d.angle||'—';
     $('hook').textContent=d.hook?('« '+d.hook+' »'):'—';
     fill('atouts',d.atouts); fill('defauts',d.defauts); fill('recos',d.recos); fillHooks(d.hooks_reecrits);
