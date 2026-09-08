@@ -142,6 +142,13 @@
   .verdict.r{background:var(--rose-soft);color:var(--rose-deep)} .num.r{color:var(--rose-deep)}
   .launchnote{font-size:13px;color:var(--ink-soft);font-weight:600;margin:0 0 12px;line-height:1.4}
   .launchnote:empty{display:none}
+  .potcard{margin-top:14px;background:var(--green-soft);border:1px solid var(--line);border-radius:18px;padding:18px 22px 20px;text-align:center}
+  .potlbl{font-size:13px;font-weight:800;letter-spacing:.02em;color:var(--green);margin-bottom:8px}
+  .potnums{display:flex;align-items:baseline;justify-content:center;gap:12px;font-family:"Bodoni Moda",serif;line-height:1}
+  .potnums .from{font-size:34px;font-weight:700;color:var(--muted)}
+  .potnums .arr{font-size:26px;color:var(--green);font-family:"Hanken Grotesk",sans-serif;font-weight:800}
+  .potnums .to{font-size:50px;font-weight:900;color:var(--green)}
+  .potnums .potden{font-size:14px;color:var(--muted);font-family:"Hanken Grotesk",sans-serif;font-weight:600}
   .scoremeta .angle{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700}
   .angleval{font-family:"Bodoni Moda",serif;font-size:19px;color:var(--ink);margin-top:3px;line-height:1.25}
   .hookline{margin-top:22px;padding-top:20px;border-top:1px solid var(--line);
@@ -345,6 +352,11 @@
           </div>
         </div>
         <div class="hookline"><span class="lab">Le hook · 3 premières secondes</span><span id="hook"></span></div>
+      </div>
+
+      <div class="potcard" id="potcard" hidden>
+        <div class="potlbl">📈 Corrigée, cette pub passerait à</div>
+        <div class="potnums"><span class="from" id="potfrom">—</span><span class="arr">→</span><span class="to" id="potto">—</span><span class="potden">/ 100</span></div>
       </div>
 
       <div class="sec-card" id="scoredetail" hidden>
@@ -556,6 +568,12 @@
       ? 'Au-dessus de 70, inutile de chercher la perfection : cette pub est prête, lance-la.'
       : (cls==='o' ? 'Applique les corrections ci-dessous et vise 70 — pas plus.'
                    : 'Retravaille les points ci-dessous, puis re-teste : objectif 70/100.');
+    // Potentiel après corrections : estimation du modèle, sinon repli sur une progression réaliste.
+    var pot = (typeof d.potentiel==='number') ? d.potentiel : 0;
+    if(!pot || pot<=s){ pot = s + Math.round((100-s)*0.5); }
+    pot = Math.max(s+1, Math.min(92, pot));
+    if(cls==='g'){ $('potcard').hidden=true; }
+    else { $('potfrom').textContent=s; $('potto').textContent=pot; $('potcard').hidden=false; }
     $('angle').textContent=d.angle||'—';
     $('hook').textContent=d.hook?('« '+d.hook+' »'):'—';
     fill('atouts',d.atouts); fill('defauts',d.defauts); fill('recos',d.recos); fillHooks(d.hooks_reecrits);

@@ -52,6 +52,7 @@ Le champ "score" DOIT être exactement la somme de ces 6 sous-scores.
 Réponds UNIQUEMENT avec un objet JSON valide (aucun texte autour), de cette forme exacte :
 {
   "score": <entier 0-100, = somme des 6 critères>,
+  "potentiel": <entier: le score réaliste que CETTE pub atteindrait si toutes les recommandations ci-dessous étaient appliquées ; strictement supérieur à "score", jamais plus de 92 (aucune pub n'est parfaite)>,
   "criteres": { "hook": <0-20>, "rythme": <0-15>, "angle": <0-20>, "produit": <0-15>, "contraste": <0-15>, "demarcation": <0-15> },
   "verdict": "<'Arrête le scroll' ou 'Moyen' ou 'Se fond dans la masse'>",
   "hook": "<1 phrase sur la force ou faiblesse des 3 premières secondes>",
