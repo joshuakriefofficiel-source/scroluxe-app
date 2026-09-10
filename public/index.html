@@ -267,6 +267,26 @@
   .sechead{text-align:center;margin-bottom:6px}
   .sechead h2{font-family:"Bodoni Moda",serif;font-weight:500;font-size:24px;margin:0 0 4px}
   .sechead p{color:var(--muted);font-size:14px;margin:0}
+  .printonly{display:none}
+  .btn.export{margin-top:22px;background:var(--surface);color:var(--ink);border:1.5px solid var(--champ)}
+
+  /* Export PDF : à l'impression, on ne garde qu'un rapport propre (fond blanc, sans navigation ni upsell). */
+  @media print{
+    :root{--bg:#fff;--surface:#fff;--surface-2:#f7f7f7;--ink:#1a1a1a;--ink-soft:#3d3d3d;--muted:#777;
+      --line:#e2e2e2;--rose:#d64d6e;--rose-deep:#b6304f;--rose-soft:#f6dde2;--champ:#a9823f;--champ-soft:#efe1c6;--green:#3f7d5e;--green-soft:#dcebe1;}
+    *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+    body::before{display:none !important}
+    body{background:#fff !important}
+    body *{visibility:hidden !important}
+    #result, #result *{visibility:visible !important}
+    #result{position:absolute !important;left:0;top:0;width:100% !important;display:block !important;margin:0 !important;padding:0 !important}
+    .procta,#again,#retest,#exportPdf{display:none !important}
+    .hookcard button{display:none !important}
+    .printonly{display:block !important;text-align:center;margin:0 0 14px}
+    .printonly .pt{font-family:"Bodoni Moda",serif;font-weight:700;font-size:22px}
+    .printonly .ps{font-size:12px;color:var(--muted);letter-spacing:.04em}
+    .rcard,.sec-card,.cmpcard,.potcard,.cols{break-inside:avoid;page-break-inside:avoid}
+  }
 </style>
 </head>
 <body>
@@ -352,6 +372,7 @@
     </div>
 
     <div class="result" id="result">
+      <div class="printonly" id="printhead"><div class="pt">Scroluxe — Rapport d'analyse</div><div class="ps">Le pré-test créa des marques beauté · scroluxe-app.onrender.com</div></div>
       <div class="cmpcard up" id="cmpcard" hidden>
         <div class="cmplbl" id="cmplbl">🔁 Ta version corrigée</div>
         <div class="cmpnums"><span class="a" id="cmpa">—</span><span class="ar">→</span><span class="b" id="cmpb">—</span></div>
@@ -420,6 +441,7 @@
         <div class="prook" id="prook" hidden>✓ Parfait, tu es sur la liste ! On te prévient dès l'ouverture du Pro 🎉</div>
       </div>
 
+      <button class="btn export" id="exportPdf" type="button">⬇️ Exporter le rapport en PDF</button>
       <button class="btn retest" id="retest" type="button">🔁 J'ai corrigé ma pub — retester</button>
       <button class="btn again" id="again" type="button">Noter une autre pub</button>
     </div>
@@ -636,6 +658,7 @@
     $('ctxFields').hidden=true; $('ctxToggle').setAttribute('aria-expanded','false');
     form.style.display='block';
   }
+  $('exportPdf').addEventListener('click',function(){ window.print(); });
   $('again').addEventListener('click',function(){
     // Nouvelle pub : on repart de zéro, plus de comparaison.
     prevScore=null; $('retestnote').hidden=true; $('cmpcard').hidden=true;
