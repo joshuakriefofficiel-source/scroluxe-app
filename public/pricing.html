@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scroluxe — Tarifs</title>
+<meta name="theme-color" content="#f5ebe6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;0,6..96,900;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --bg:#f4e9e3;--surface:#fbf6f2;--surface-2:#f0e2db;--ink:#281820;--ink-soft:#5f4650;--muted:#8a7079;
+    --line:#e3d3cb;--rose:#d64d6e;--rose-deep:#b6304f;--rose-soft:#f6dde2;--champ:#a9823f;--champ-soft:#efe1c6;
+    --green:#3f7d5e;--green-soft:#dcebe1;--shadow:0 30px 70px -35px rgba(40,24,32,.35);
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --bg:#150e13;--surface:#22161e;--surface-2:#2b1d26;--ink:#f4e7e2;--ink-soft:#d6bfc7;--muted:#9c8189;
+    --line:#3a2831;--rose:#f0708c;--rose-deep:#f0708c;--rose-soft:#3d2029;--champ:#d6ac68;--champ-soft:#352815;
+    --green:#6fb98f;--green-soft:#1c2d24;--shadow:0 30px 80px -40px rgba(0,0,0,.8);
+  }}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;color:var(--ink);font-family:"Hanken Grotesk",system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;
+    background:radial-gradient(60% 40% at 85% -5%,color-mix(in srgb,var(--rose) 20%,transparent),transparent 70%),
+      radial-gradient(55% 40% at 0% 8%,color-mix(in srgb,var(--champ) 16%,transparent),transparent 70%),var(--bg);}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  a{color:inherit}
+  header.top{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+  .logo{font-family:"Bodoni Moda",serif;font-weight:700;font-size:24px;text-decoration:none}
+  .logo b{color:var(--rose-deep)}
+  .backlink{font-size:14px;font-weight:600;color:var(--ink-soft);text-decoration:none}
+  .backlink:hover{color:var(--rose-deep)}
+
+  .head{text-align:center;max-width:640px;margin:26px auto 8px}
+  .eyebrow{font-size:11px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--rose-deep)}
+  h1{font-family:"Bodoni Moda",serif;font-weight:500;font-size:clamp(30px,6vw,46px);line-height:1.06;margin:10px 0 10px;letter-spacing:-.01em}
+  h1 em{font-style:italic;color:var(--rose-deep)}
+  .sub{color:var(--ink-soft);font-size:17px;margin:0 auto;max-width:520px}
+  .launchbar{display:inline-flex;align-items:center;gap:8px;margin:20px auto 0;background:var(--green-soft);color:var(--green);
+    border:1px solid var(--line);border-radius:100px;padding:9px 18px;font-weight:700;font-size:14px}
+
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:30px 0 10px}
+  @media (max-width:820px){.cards{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:26px 24px;display:flex;flex-direction:column;position:relative}
+  .card.pop{border-color:var(--rose);box-shadow:var(--shadow)}
+  .badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--rose-deep);color:#fff;font-weight:800;
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;border-radius:100px;white-space:nowrap}
+  .pname{font-family:"Bodoni Moda",serif;font-weight:700;font-size:22px}
+  .pdesc{color:var(--muted);font-size:13.5px;margin:2px 0 14px;min-height:38px}
+  .price{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
+  .price .amt{font-family:"Bodoni Moda",serif;font-weight:900;font-size:44px;line-height:1}
+  .price .per{color:var(--muted);font-weight:600;font-size:14px}
+  .plist{list-style:none;padding:0;margin:18px 0 22px;display:grid;gap:10px}
+  .plist li{position:relative;padding-left:26px;font-size:14px;color:var(--ink-soft)}
+  .plist li::before{content:"✓";position:absolute;left:0;top:0;color:var(--green);font-weight:800}
+  .plist li.off{color:var(--muted);opacity:.7}
+  .plist li.off::before{content:"–";color:var(--muted)}
+  .pbtn{margin-top:auto;display:block;width:100%;text-align:center;border:none;cursor:pointer;font-family:inherit;
+    font-weight:800;font-size:16px;padding:15px 18px;border-radius:100px;text-decoration:none}
+  .pbtn.primary{background:var(--rose-deep);color:#fff}
+  .pbtn.ghost{background:var(--surface-2);color:var(--ink);border:1.5px solid var(--line)}
+  .pbtn:hover{filter:brightness(1.05)}
+
+  .tablewrap{overflow-x:auto;margin:36px 0 10px;border:1px solid var(--line);border-radius:20px;background:var(--surface)}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+  th,td{padding:14px 16px;text-align:center;border-bottom:1px solid var(--line)}
+  tbody tr:last-child td{border-bottom:none}
+  th{font-family:"Bodoni Moda",serif;font-weight:700;font-size:16px}
+  th.pop,td.pop{background:color-mix(in srgb,var(--rose-soft) 40%,transparent)}
+  td.feat,th.feat{text-align:left;font-weight:600;color:var(--ink)}
+  td.no{color:var(--muted)}
+  .yes{color:var(--green);font-weight:800}
+
+  .reserve{margin:34px auto 8px;max-width:520px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px;text-align:center}
+  .reserve[hidden]{display:none}
+  .reserve h3{font-family:"Bodoni Moda",serif;font-weight:700;font-size:22px;margin:0 0 6px}
+  .reserve .chosen{color:var(--rose-deep);font-weight:800}
+  .reserve p{color:var(--ink-soft);font-size:14.5px;margin:4px 0 16px}
+  .rrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .rrow input[type=email]{flex:1;min-width:200px;font-family:inherit;font-size:15px;padding:14px 16px;border:1.5px solid var(--line);
+    border-radius:100px;background:var(--surface-2);color:var(--ink)}
+  .rrow input[type=email]:focus-visible{outline:none;border-color:var(--rose)}
+  .rrow button{background:var(--rose-deep);color:#fff;border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:15px;padding:14px 24px;border-radius:100px}
+  .rok{color:var(--green);font-weight:700;font-size:15.5px}
+  .rok[hidden]{display:none}
+
+  .foot{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 46px;max-width:620px;margin:0 auto}
+  .foot a{color:var(--rose-deep);text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <a class="logo" href="/">Scro<b>luxe</b></a>
+      <a class="backlink" href="/">← Analyser ma pub</a>
+    </header>
+
+    <div class="head">
+      <span class="eyebrow">Tarifs</span>
+      <h1>Des prix simples, <em>pensés pour ta croissance</em></h1>
+      <p class="sub">Commence gratuitement. Passe au niveau supérieur quand tu veux tester plus de créas et suivre leurs performances.</p>
+      <div class="launchbar">🚀 Offre de lancement — aujourd'hui, tout est gratuit</div>
+    </div>
+
+    <div class="cards">
+      <!-- FREE -->
+      <div class="card">
+        <div class="pname">Free</div>
+        <div class="pdesc">Pour tester Scroluxe et noter tes premières pubs.</div>
+        <div class="price"><span class="amt">0€</span><span class="per">/ pour toujours</span></div>
+        <ul class="plist">
+          <li>2 analyses / mois</li>
+          <li>Score de la créa</li>
+          <li>Recommandations basiques</li>
+          <li>Historique 7 jours</li>
+          <li class="off">Export PDF</li>
+          <li class="off">Comparaison de créas</li>
+          <li class="off">Suivi des performances</li>
+        </ul>
+        <a class="pbtn ghost" href="/">Commencer gratuitement</a>
+      </div>
+
+      <!-- PRO -->
+      <div class="card pop">
+        <span class="badge">★ Populaire</span>
+        <div class="pname">Pro</div>
+        <div class="pdesc">Pour la marque ou le créateur qui lance des pubs régulièrement.</div>
+        <div class="price"><span class="amt">39€</span><span class="per">/ mois</span></div>
+        <ul class="plist">
+          <li>20 analyses / mois</li>
+          <li>Recommandations complètes</li>
+          <li>Historique 90 jours</li>
+          <li>Export PDF des rapports</li>
+          <li>Comparaison de créas (avant/après)</li>
+          <li>Bibliothèque de créas (limitée)</li>
+          <li>Rapports basiques</li>
+        </ul>
+        <button class="pbtn primary" type="button" data-plan="Pro (39€/mois)" data-counter="plan_pro">Choisir Pro</button>
+      </div>
+
+      <!-- STUDIO -->
+      <div class="card">
+        <div class="pname">Studio</div>
+        <div class="pdesc">Pour les agences et les équipes qui gèrent plusieurs marques.</div>
+        <div class="price"><span class="amt">199€</span><span class="per">/ mois</span></div>
+        <ul class="plist">
+          <li>200+ analyses / mois</li>
+          <li>Recommandations avancées</li>
+          <li>Historique illimité</li>
+          <li>Suivi des performances</li>
+          <li>Bibliothèque de créas complète</li>
+          <li>Plusieurs marques &amp; utilisateurs</li>
+          <li>Rapports avancés · API bientôt 🔜</li>
+        </ul>
+        <button class="pbtn primary" type="button" data-plan="Studio (199€/mois)" data-counter="plan_studio">Choisir Studio</button>
+      </div>
+    </div>
+
+    <!-- Grille complète -->
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th class="feat">Fonction</th><th>Free</th><th class="pop">Pro · 39€</th><th>Studio · 199€</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="feat">Analyses / mois</td><td>2</td><td class="pop">20</td><td>200+</td></tr>
+          <tr><td class="feat">Score de la créa</td><td><span class="yes">✓</span></td><td class="pop"><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+          <tr><td class="feat">Recommandations IA</td><td>Basique</td><td class="pop">Complètes</td><td>Avancées</td></tr>
+          <tr><td class="feat">Historique</td><td>7 jours</td><td class="pop">90 jours</td><td>Illimité</td></tr>
+          <tr><td class="feat">Export PDF</td><td class="no">—</td><td class="pop"><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+          <tr><td class="feat">Comparaison de créas</td><td class="no">—</td><td class="pop"><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+          <tr><td class="feat">Bibliothèque de créas</td><td class="no">—</td><td class="pop">Limitée</td><td>Complète</td></tr>
+          <tr><td class="feat">Suivi des performances</td><td class="no">—</td><td class="pop no">—</td><td><span class="yes">✓</span></td></tr>
+          <tr><td class="feat">Plusieurs marques</td><td>1</td><td class="pop">1</td><td>Illimité</td></tr>
+          <tr><td class="feat">Utilisateurs</td><td>1</td><td class="pop">1</td><td>Plusieurs</td></tr>
+          <tr><td class="feat">Rapports</td><td class="no">—</td><td class="pop">Basique</td><td>Avancé</td></tr>
+          <tr><td class="feat">API / intégrations</td><td class="no">—</td><td class="pop no">—</td><td>🔜</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Réservation (fausse porte : liste d'attente, pas de paiement) -->
+    <div class="reserve" id="reserve" hidden>
+      <h3>Réserve ton tarif de lancement</h3>
+      <p>Tu réserves : <span class="chosen" id="chosenPlan">—</span>.<br>Les offres payantes ouvrent bientôt — laisse ton email, on te prévient <b>en premier</b> et tu gardes le tarif de lancement.</p>
+      <form id="reserveForm">
+        <input type="hidden" name="_subject" value="Réservation d'un plan (page tarifs)">
+        <input type="hidden" name="source" value="Page tarifs Scroluxe">
+        <input type="hidden" name="plan" id="planField" value="">
+        <div class="rrow">
+          <input type="email" name="email" id="remail" placeholder="ton@email.com" aria-label="Adresse email" autocomplete="email" required>
+          <button type="submit">Réserver ma place</button>
+        </div>
+      </form>
+      <div class="rok" id="rok" hidden>✓ Parfait, tu es sur la liste ! On te prévient dès l'ouverture 🎉</div>
+    </div>
+
+    <p class="foot">
+      Aucun paiement pour l'instant — Scroluxe est <b>gratuit pendant le lancement</b>. Ces offres arrivent bientôt ;
+      réserve ta place pour être prévenu·e en premier. · <a href="/">Analyser ma pub →</a>
+    </p>
+  </div>
+
+<script>
+  var $=function(id){return document.getElementById(id);};
+  var FORMSPREE="https://formspree.io/f/mjyvelon";
+  var reserve=$('reserve');
+
+  Array.prototype.forEach.call(document.querySelectorAll('button[data-plan]'), function(btn){
+    btn.addEventListener('click', function(){
+      var plan=btn.getAttribute('data-plan'), counter=btn.getAttribute('data-counter');
+      $('chosenPlan').textContent=plan; $('planField').value=plan;
+      reserve.hidden=false; $('rok').hidden=true; $('reserveForm').style.display='block';
+      // compte le tier cliqué (persistant, gratuit) — sans bloquer
+      try{ fetch('https://abacus.jasoncameron.dev/hit/scroluxe_app/'+counter).catch(function(){}); }catch(_){}
+      reserve.scrollIntoView({behavior:'smooth',block:'center'});
+      setTimeout(function(){ $('remail').focus(); },400);
+    });
+  });
+
+  $('reserveForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var form=e.target;
+    fetch(FORMSPREE,{method:'POST',headers:{'Accept':'application/json'},body:new FormData(form)})
+      .then(function(){ form.style.display='none'; $('rok').hidden=false; })
+      .catch(function(){ form.style.display='none'; $('rok').hidden=false; });
+  });
+</script>
+</body>
+</html>
