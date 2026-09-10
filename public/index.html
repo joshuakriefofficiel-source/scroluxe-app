@@ -149,6 +149,23 @@
   .potnums .arr{font-size:26px;color:var(--green);font-family:"Hanken Grotesk",sans-serif;font-weight:800}
   .potnums .to{font-size:50px;font-weight:900;color:var(--green)}
   .potnums .potden{font-size:14px;color:var(--muted);font-family:"Hanken Grotesk",sans-serif;font-weight:600}
+
+  /* Boucle fermée : bandeau de comparaison avant/après */
+  .cmpcard{margin:0 0 16px;border-radius:20px;padding:20px 22px 22px;text-align:center;border:1px solid var(--line)}
+  .cmpcard.up{background:var(--green-soft)} .cmpcard.flat{background:var(--champ-soft)}
+  .cmplbl{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px}
+  .cmpcard.up .cmplbl{color:var(--green)} .cmpcard.flat .cmplbl{color:var(--champ)}
+  .cmpnums{display:flex;align-items:baseline;justify-content:center;gap:12px;font-family:"Bodoni Moda",serif;line-height:1}
+  .cmpnums .a{font-size:34px;font-weight:700;color:var(--muted)}
+  .cmpnums .ar{font-size:26px;font-weight:800;font-family:"Hanken Grotesk",sans-serif}
+  .cmpcard.up .cmpnums .ar{color:var(--green)} .cmpcard.flat .cmpnums .ar{color:var(--champ)}
+  .cmpnums .b{font-size:52px;font-weight:900}
+  .cmpcard.up .cmpnums .b{color:var(--green)} .cmpcard.flat .cmpnums .b{color:var(--champ)}
+  .cmpdelta{margin-top:9px;font-weight:800;font-size:16px}
+  .cmpcard.up .cmpdelta{color:var(--green)} .cmpcard.flat .cmpdelta{color:var(--champ)}
+  .retestnote{background:var(--champ-soft);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:14px;font-size:14px;font-weight:600;color:var(--ink-soft);text-align:center}
+  .retestnote b{color:var(--champ)}
+  .btn.retest{margin-top:12px;background:var(--surface);color:var(--ink);border:1.5px solid var(--rose)}
   .scoremeta .angle{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700}
   .angleval{font-family:"Bodoni Moda",serif;font-size:19px;color:var(--ink);margin-top:3px;line-height:1.25}
   .hookline{margin-top:22px;padding-top:20px;border-top:1px solid var(--line);
@@ -277,6 +294,7 @@
 
   <section class="panel" id="panel">
     <form id="form">
+      <div class="retestnote" id="retestnote" hidden>🔁 Uploade ta <b>version corrigée</b> — on la compare à ta version à <b><span id="retestfrom">—</span>/100</b>.</div>
       <label class="drop" id="drop">
         <span class="ico">🎬</span>
         <span class="big">Choisis ou glisse ta vidéo</span>
@@ -334,6 +352,11 @@
     </div>
 
     <div class="result" id="result">
+      <div class="cmpcard up" id="cmpcard" hidden>
+        <div class="cmplbl" id="cmplbl">🔁 Ta version corrigée</div>
+        <div class="cmpnums"><span class="a" id="cmpa">—</span><span class="ar">→</span><span class="b" id="cmpb">—</span></div>
+        <div class="cmpdelta" id="cmpdelta"></div>
+      </div>
       <div class="rcard">
         <div class="scorehead">
           <div class="gauge">
@@ -397,6 +420,7 @@
         <div class="prook" id="prook" hidden>✓ Parfait, tu es sur la liste ! On te prévient dès l'ouverture du Pro 🎉</div>
       </div>
 
+      <button class="btn retest" id="retest" type="button">🔁 J'ai corrigé ma pub — retester</button>
       <button class="btn again" id="again" type="button">Noter une autre pub</button>
     </div>
   </section>
@@ -448,6 +472,7 @@
       loading=$('loading'),loadmsg=$('loadmsg'),result=$('result'),warn=$('warn'),err=$('err'),
       teaser=$('teaser'),lastFile=null,progTimer=null,ctrl=null,startTime=0,EST=85;
   var FORMSPREE_PRO="https://formspree.io/f/mjyvelon";
+  var prevScore=null, lastShownScore=0; // boucle fermée : score de la version précédente
 
   var LOAD_MSGS=["Scroluxe regarde ta pub…","Analyse du hook (0-3s)…","Mesure du rythme et du montage…",
     "Détection de l'angle…","Comparaison aux codes gagnants…","Rédaction des recommandations…"];
@@ -555,6 +580,18 @@
   function showResult(d){
     var s=Math.max(0,Math.min(100,d.score||0));
     var cls=s>=70?'g':(s>=45?'o':'r');
+    // Boucle fermée : si on re-teste une version corrigée, on affiche l'avant/après réel.
+    if(prevScore!=null){
+      var delta=s-prevScore, cc=$('cmpcard');
+      cc.className='cmpcard '+(delta>0?'up':'flat');
+      $('cmplbl').textContent = delta>0 ? '🔁 Ta version corrigée' : '🔁 Version corrigée';
+      $('cmpa').textContent=prevScore; $('cmpb').textContent=s;
+      if(delta>0){ $('cmpdelta').textContent='+'+delta+' points 🔥'; }
+      else if(delta===0){ $('cmpdelta').textContent='Même score — retravaille encore un point 👇'; }
+      else { $('cmpdelta').textContent=delta+' points — l\'ancienne version était meilleure'; }
+      cc.hidden=false;
+    } else { $('cmpcard').hidden=true; }
+    lastShownScore=s;
     // gauge
     var arc=$('arc'), circ=364.4;
     arc.style.stroke='var(--'+(cls==='g'?'green':cls==='o'?'champ':'rose-deep')+')';
@@ -591,12 +628,24 @@
   form.addEventListener('submit',function(e){ e.preventDefault(); analyze(); });
   $('retryWarn').addEventListener('click',analyze);
   $('retryErr').addEventListener('click',analyze);
-  $('again').addEventListener('click',function(){
+  function resetForm(){
     hideAll(); form.reset(); fname.classList.remove('show'); fname.textContent=''; submit.disabled=true;
     lastFile=null; if(curUrl){ URL.revokeObjectURL(curUrl); curUrl=null; } $('pvid').removeAttribute('src'); $('preview').classList.remove('show');
     $('proBtn').hidden=false; $('proform').hidden=true; $('prook').hidden=true; $('proform').reset();
     $('ctxFields').hidden=true; $('ctxToggle').setAttribute('aria-expanded','false');
-    form.style.display='block'; teaser.style.display='block';
+    form.style.display='block';
+  }
+  $('again').addEventListener('click',function(){
+    // Nouvelle pub : on repart de zéro, plus de comparaison.
+    prevScore=null; $('retestnote').hidden=true; $('cmpcard').hidden=true;
+    resetForm(); teaser.style.display='block';
+  });
+  $('retest').addEventListener('click',function(){
+    // Version corrigée : on garde le score actuel comme référence pour l'avant/après.
+    prevScore=lastShownScore;
+    resetForm(); teaser.style.display='none';
+    $('retestfrom').textContent=prevScore; $('retestnote').hidden=false; $('cmpcard').hidden=true;
+    window.scrollTo({top:0,behavior:'smooth'});
   });
 
   // Bouton "S'abonner au Pro" (fausse porte) : compte le clic + capture l'email.
